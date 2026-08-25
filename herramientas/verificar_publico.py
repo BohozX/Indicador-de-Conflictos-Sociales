@@ -8,10 +8,16 @@ from __future__ import annotations
 
 import csv
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+
+# Durante la corrida, el motor privado se descarga en private/. No es contenido
+# de este repositorio: esta en .gitignore y el commit usa rutas explicitas. Por
+# eso no se lee su contenido; lo que se comprueba es exactamente eso.
+PRIVADO = "private"
 
 # Lo unico que puede vivir en pagina/data
 DATOS_PERMITIDOS = {"ultimos_90_dias.csv", "resumen.json"}
@@ -46,7 +52,35 @@ def fallar(mensaje: str) -> None:
     sys.exit(1)
 
 
+def git(*argumentos: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["git", *argumentos], cwd=RAIZ, capture_output=True, text=True,
+    )
+
+
+def revisar_motor_privado() -> None:
+    """El motor privado puede estar en el disco, nunca en el repositorio."""
+    if not (RAIZ / PRIVADO).is_dir():
+        return
+
+    rastreados = git("ls-files", "--", PRIVADO).stdout.split()
+    if rastreados:
+        fallar(f"el motor privado esta rastreado por git: {rastreados[:5]}")
+
+    if git("check-ignore", "-q", "--", f"{PRIVADO}/").returncode != 0:
+        fallar(f"{PRIVADO}/ no esta en .gitignore")
+
+    sucio = [l for l in git("status", "--porcelain").stdout.splitlines()
+             if l[3:].lstrip('"').startswith(f"{PRIVADO}/")]
+    if sucio:
+        fallar(f"el motor privado aparece en git status: {sucio[:5]}")
+
+    print(f"[OK] {PRIVADO}/ ignorado por git, sin archivos rastreados")
+
+
 def main() -> int:
+    revisar_motor_privado()
+
     datos = RAIZ / "pagina" / "data"
 
     presentes = {p.name for p in datos.glob("*") if p.is_file()}
@@ -71,7 +105,7 @@ def main() -> int:
 
     # ningun archivo del repositorio puede contener rastros privados
     for ruta in RAIZ.rglob("*"):
-        if not ruta.is_file() or ".git" in ruta.parts:
+        if not ruta.is_file() or ".git" in ruta.parts or PRIVADO in ruta.parts:
             continue
         if ruta.suffix.lower() in EXTENSIONES_PROHIBIDAS:
             fallar(f"archivo de tipo prohibido: {ruta.relative_to(RAIZ)}")
