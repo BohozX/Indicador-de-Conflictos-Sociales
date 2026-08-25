@@ -78,8 +78,40 @@ def revisar_motor_privado() -> None:
     print(f"[OK] {PRIVADO}/ ignorado por git, sin archivos rastreados")
 
 
+def revisar_indicador_referencial() -> None:
+    """codigo/indicador.py se publica para leerse, no para correrse.
+
+    La serie sale del motor privado. Si algun dia algo de aqui empezara a
+    importarlo o ejecutarlo, este repositorio dejaria de ser solo un espejo y
+    la corrida falla antes de publicar.
+    """
+    objetivo = RAIZ / "codigo" / "indicador.py"
+    if not objetivo.is_file():
+        fallar("falta codigo/indicador.py")
+
+    importa = re.compile(
+        r"^\s*(from\s+(codigo\.)?indicador\s+import|import\s+(codigo\.)?indicador)", re.M)
+    ejecuta = re.compile(r"python[0-9.]*\s+(-\S+\s+)*[\"']?codigo/indicador\.py")
+
+    for ruta in RAIZ.rglob("*"):
+        if not ruta.is_file() or ".git" in ruta.parts or PRIVADO in ruta.parts:
+            continue
+        if ruta.suffix.lower() not in {".py", ".yml", ".yaml", ".sh"}:
+            continue
+        if ruta in (objetivo, Path(__file__).resolve()):
+            continue
+        texto = ruta.read_text(encoding="utf-8", errors="replace")
+        if importa.search(texto):
+            fallar(f"{ruta.relative_to(RAIZ)} importa el indicador de referencia")
+        if ejecuta.search(texto):
+            fallar(f"{ruta.relative_to(RAIZ)} ejecuta el indicador de referencia")
+
+    print("[OK] codigo/indicador.py es solo referencia: nadie lo importa ni lo ejecuta")
+
+
 def main() -> int:
     revisar_motor_privado()
+    revisar_indicador_referencial()
 
     datos = RAIZ / "pagina" / "data"
 
