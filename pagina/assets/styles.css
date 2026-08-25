@@ -1,0 +1,203 @@
+/* Indicador de Conflictos Sociales - Bolivia */
+
+:root {
+  --bg: #12100c;
+  --panel: #1b1813;
+  --panel-2: #211d17;
+  --line: rgba(214, 168, 96, .14);
+  --line-soft: rgba(214, 168, 96, .07);
+
+  --acento: #d6a860;
+  --acento-dim: #9a7635;
+  --acento-soft: rgba(214, 168, 96, .13);
+  --alerta: #d9694a;
+
+  --ink: #f2ece1;
+  --ink-2: #b3a894;
+  --ink-3: #7d735f;
+
+  --r: 14px;
+  --shadow: 0 16px 36px rgba(0, 0, 0, .4);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(154, 118, 53, .16), transparent 70%),
+    var(--bg);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+
+h1, h2, p { margin: 0; }
+strong, .cifra em, text { font-variant-numeric: tabular-nums; }
+
+.shell { width: min(1120px, 100%); margin: 0 auto; padding: 26px 16px 48px; }
+
+/* ------------------------------------------------------------- cabecera -- */
+
+.eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--acento-dim);
+}
+
+h1 {
+  margin-top: 10px;
+  font-size: 30px; font-weight: 800; letter-spacing: -.5px; line-height: 1.14;
+}
+
+.intro { margin-top: 12px; max-width: 62ch; font-size: 14.5px; color: var(--ink-2); }
+
+/* --------------------------------------------------------------- cifras -- */
+
+.cifras {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px; margin-top: 26px;
+}
+
+.cifra {
+  position: relative; overflow: hidden;
+  padding: 15px 16px;
+  border: 1px solid var(--line-soft); border-radius: var(--r);
+  background: linear-gradient(165deg, var(--panel-2), var(--panel));
+}
+
+.cifra::before {
+  content: ""; position: absolute; top: 0; left: 0;
+  width: 32px; height: 2px; background: var(--ink-3);
+}
+.cifra.destacada::before { background: var(--acento); }
+
+.cifra > span {
+  font-size: 11px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.cifra > strong {
+  display: block; margin-top: 7px;
+  font-size: 27px; font-weight: 800; letter-spacing: -.4px; line-height: 1.1;
+}
+.cifra.destacada > strong { color: var(--acento); }
+.cifra > em { display: block; margin-top: 3px; font-size: 11.5px; font-style: normal; color: var(--ink-3); }
+
+/* -------------------------------------------------------------- grafico -- */
+
+.grafico-card {
+  margin-top: 14px; padding: 16px;
+  border: 1px solid var(--line-soft); border-radius: 18px;
+  background: linear-gradient(168deg, var(--panel-2), var(--panel) 65%);
+  box-shadow: var(--shadow);
+}
+
+.grafico-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.grafico-head h2 { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+.rango { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-3); }
+
+.vista {
+  display: inline-flex; gap: 3px; padding: 3px;
+  border: 1px solid var(--line-soft); border-radius: 11px;
+  background: rgba(18, 16, 12, .6);
+}
+.vista button {
+  min-height: 34px; padding: 0 15px;
+  border: 0; border-radius: 8px; background: transparent;
+  font: inherit; font-size: 12.5px; font-weight: 700;
+  color: var(--ink-3); cursor: pointer;
+  transition: background .16s, color .16s;
+}
+.vista button:hover { color: var(--ink-2); }
+.vista button.activo { background: var(--acento-soft); color: var(--acento); }
+
+.nota-vista {
+  margin-top: 10px; font-size: 12px; color: var(--ink-3);
+}
+
+.grafico-wrap { position: relative; margin-top: 14px; height: 320px; }
+#grafico { width: 100%; height: 100%; display: block; overflow: visible; touch-action: pan-y; }
+
+.tip {
+  position: absolute; z-index: 5; pointer-events: none;
+  padding: 9px 11px;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: rgba(33, 29, 23, .97); box-shadow: var(--shadow);
+  font-size: 12.5px; white-space: nowrap;
+}
+.tip b { display: block; margin-top: 3px; font-size: 15px; color: var(--acento); }
+
+.estado {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; justify-items: center; gap: 5px;
+  text-align: center; padding: 20px;
+  background: rgba(27, 24, 19, .9); border-radius: 12px;
+}
+.estado strong { font-size: 15px; color: var(--alerta); }
+.estado span { font-size: 12.5px; color: var(--ink-3); }
+
+/* --------------------------------------------------------- metodologia -- */
+
+.metodologia { margin-top: 14px; }
+.metodologia details {
+  border: 1px solid var(--line-soft); border-radius: var(--r);
+  background: var(--panel); overflow: hidden;
+}
+.metodologia summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 46px; padding: 0 16px;
+  font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-2); cursor: pointer; list-style: none;
+}
+.metodologia summary::-webkit-details-marker { display: none; }
+.metodologia summary svg {
+  width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; transition: transform .2s;
+}
+.metodologia details[open] summary svg { transform: rotate(180deg); }
+.cuerpo { padding: 2px 16px 16px; border-top: 1px solid var(--line-soft); }
+.cuerpo p { margin-top: 11px; font-size: 13.5px; color: var(--ink-2); max-width: 76ch; }
+.cuerpo b { color: var(--ink); }
+.cuerpo .nota { font-size: 12.5px; color: var(--ink-3); }
+.cuerpo code {
+  padding: 1px 5px; border-radius: 5px;
+  background: var(--acento-soft); color: var(--acento);
+  font-size: 12px;
+}
+
+/* ----------------------------------------------------------------- pie -- */
+
+footer {
+  display: flex; flex-direction: column; gap: 3px;
+  margin-top: 22px; padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 11.5px; color: var(--ink-3);
+}
+
+/* ---------------------------------------------------------- responsive -- */
+
+@media (min-width: 720px) {
+  .cifras { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .grafico-wrap { height: 380px; }
+  h1 { font-size: 34px; }
+  .shell { padding: 34px 24px 56px; }
+  .grafico-card { padding: 22px; }
+  footer { flex-direction: row; flex-wrap: wrap; gap: 4px 20px; }
+}
+
+@media (min-width: 1024px) {
+  .grafico-wrap { height: 420px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .001ms !important; }
+}
+
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 6px; }
+.tip .detalle { display: block; margin-top: 3px; font-size: 11.5px; color: var(--ink-3); }

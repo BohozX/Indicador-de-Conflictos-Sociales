@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+
+# Nada del motor privado puede entrar aqui
+private/
+*.pem
+*.key
+.env
+.env.*
+*.jsonl
+*.jsonl.gz
+*.zip
+*.tar.gz

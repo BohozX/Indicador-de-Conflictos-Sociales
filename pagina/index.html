@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Indicador de Conflictos Sociales · Bolivia</title>
+    <meta name="description" content="Bloqueos de carreteras por conflictos sociales en Bolivia, últimos 90 días, a partir de los reportes de transitabilidad de la ABC.">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#12100c">
+    <link rel="stylesheet" href="assets/styles.css?v=1">
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <p class="eyebrow">Bolivia · Red vial fundamental</p>
+        <h1>Indicador de Conflictos Sociales</h1>
+        <p class="intro">
+          Puntos de la red vial bloqueados por conflictos sociales, día a día.
+          Se construye a partir de los reportes públicos de transitabilidad de la
+          Administradora Boliviana de Carreteras.
+        </p>
+      </header>
+
+      <section class="cifras" id="cifras" aria-live="polite">
+        <article class="cifra destacada">
+          <span>Bloqueos hoy</span>
+          <strong id="c-hoy">—</strong>
+          <em id="c-hoy-fecha"></em>
+        </article>
+        <article class="cifra">
+          <span>Máximo en 90 días</span>
+          <strong id="c-max">—</strong>
+          <em>puntos en un solo día</em>
+        </article>
+        <article class="cifra">
+          <span>Días con bloqueo</span>
+          <strong id="c-dias">—</strong>
+          <em>de los últimos 90</em>
+        </article>
+        <article class="cifra">
+          <span>Promedio diario</span>
+          <strong id="c-prom">—</strong>
+          <em>puntos por día</em>
+        </article>
+      </section>
+
+      <section class="grafico-card">
+        <div class="grafico-head">
+          <div>
+            <h2>Últimos 90 días</h2>
+            <span class="rango" id="rango">—</span>
+          </div>
+          <div class="vista" id="vista" role="group" aria-label="Agrupación">
+            <button class="activo" type="button" data-vista="dia" aria-pressed="true">Diario</button>
+            <button type="button" data-vista="semana" aria-pressed="false">Semanal</button>
+          </div>
+        </div>
+        <p class="nota-vista" id="nota-vista" hidden>
+          Cada barra es el promedio de puntos bloqueados por día, en semanas de lunes a domingo.
+        </p>
+        <div class="grafico-wrap" id="grafico-wrap">
+          <svg id="grafico" role="img" aria-label="Bloqueos diarios de los últimos 90 días"></svg>
+          <div class="tip" id="tip" hidden></div>
+          <div class="estado" id="estado" hidden>
+            <strong id="estado-titulo">Datos no disponibles</strong>
+            <span id="estado-detalle">No fue posible cargar la serie.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="metodologia">
+        <details>
+          <summary><span>Metodología</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></summary>
+          <div class="cuerpo">
+            <p>
+              La unidad de conteo es <b>una coordenada única por día</b>. Un mismo punto
+              de la carretera reportado varias veces en una jornada cuenta una sola vez.
+            </p>
+            <p>
+              Un punto se cuenta desde el día en que se reporta el bloqueo y sigue
+              contando mientras el episodio permanezca abierto. El último día se cuenta
+              solo si, antes del cierre, hubo al menos una observación en la que el
+              episodio seguía activo; si se cierra en la primera observación del día,
+              ese día no cuenta.
+            </p>
+            <p>
+              Solo se consideran los reportes cuyo estado corresponde a un tramo no
+              transitable por conflictos sociales, con fecha y coordenadas válidas.
+            </p>
+            <p class="nota">
+              El cálculo que produce esta serie está publicado en
+              <code>codigo/indicador.py</code> de este mismo repositorio, y se regenera
+              en cada actualización a partir del motor que lo ejecuta.
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <footer>
+        <span>Fuente: Administradora Boliviana de Carreteras (ABC) · reportes públicos de transitabilidad</span>
+        <span id="pie-actualizado">—</span>
+        <span>Proyecto independiente. No es una publicación oficial de la ABC.</span>
+      </footer>
+    </div>
+
+    <script src="assets/app.js?v=1" defer></script>
+  </body>
+</html>
