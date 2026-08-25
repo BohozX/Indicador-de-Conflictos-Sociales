@@ -1,25 +1,25 @@
 :root {
-  --bg: #ffffff;
+  --bg: #f4f2ed;
   --panel: #ffffff;
-  --panel-2: #fafafa;
-  --line: rgba(0, 0, 0, .14);
-  --line-soft: rgba(0, 0, 0, .09);
+  --panel-2: #fbfaf7;
+  --line: rgba(30, 28, 24, .12);
+  --line-soft: rgba(30, 28, 24, .07);
 
-  --acento: #111111;
-  --acento-dim: #666666;
-  --acento-soft: rgba(0, 0, 0, .07);
-  --alerta: #c0392b;
+  --acento: #1e1c18;
+  --acento-dim: #6d685f;
+  --acento-soft: rgba(30, 28, 24, .06);
+  --alerta: #a2452b;
 
-  --ink: #111111;
-  --ink-2: #4a4a4a;
-  --ink-3: #7a7a7a;
+  --ink: #1e1c18;
+  --ink-2: #565149;
+  --ink-3: #8b857a;
 
-  --rejilla: rgba(0, 0, 0, .07);
-  --eje: rgba(0, 0, 0, .28);
-  --guia: rgba(0, 0, 0, .32);
+  --rejilla: rgba(30, 28, 24, .06);
+  --eje: rgba(30, 28, 24, .2);
+  --guia: rgba(30, 28, 24, .3);
 
   --r: 14px;
-  --shadow: 0 6px 18px rgba(0, 0, 0, .07);
+  --shadow: 0 1px 2px rgba(30, 28, 24, .04), 0 10px 28px rgba(30, 28, 24, .06);
 }
 
 * { box-sizing: border-box; }
@@ -34,46 +34,45 @@ body {
   font-size: 15px;
   line-height: 1.55;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, p { margin: 0; }
 strong, .cifra em, text { font-variant-numeric: tabular-nums; }
 
-.shell { width: min(1120px, 100%); margin: 0 auto; padding: 26px 16px 48px; }
-
-/* ------------------------------------------------------------- cabecera -- */
+.shell { width: min(1120px, 100%); margin: 0 auto; padding: 30px 16px 48px; }
 
 .eyebrow {
   font-size: 11px; font-weight: 700; letter-spacing: .18em;
-  text-transform: uppercase; color: var(--acento-dim);
+  text-transform: uppercase; color: var(--ink-3);
 }
 
 h1 {
   margin-top: 10px;
-  font-size: 30px; font-weight: 800; letter-spacing: -.5px; line-height: 1.14;
+  font-size: 30px; font-weight: 800; letter-spacing: -.6px; line-height: 1.12;
 }
 
 .intro { margin-top: 12px; max-width: 62ch; font-size: 14.5px; color: var(--ink-2); }
 
-/* --------------------------------------------------------------- cifras -- */
-
 .cifras {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px; margin-top: 26px;
+  gap: 10px; margin-top: 28px;
 }
 
 .cifra {
   position: relative; overflow: hidden;
   padding: 15px 16px;
   border: 1px solid var(--line-soft); border-radius: var(--r);
-  background: var(--panel-2);
+  background: var(--panel);
+  box-shadow: 0 1px 2px rgba(30, 28, 24, .03);
 }
 
 .cifra::before {
   content: ""; position: absolute; top: 0; left: 0;
-  width: 32px; height: 2px; background: var(--line);
+  width: 30px; height: 2px; background: var(--line);
 }
-.cifra.destacada::before { background: var(--acento); }
+.cifra.destacada { grid-column: 1 / -1; }
+.cifra.destacada::before { background: var(--acento); width: 40px; }
 
 .cifra > span {
   font-size: 11px; font-weight: 600; letter-spacing: .07em;
@@ -81,15 +80,12 @@ h1 {
 }
 .cifra > strong {
   display: block; margin-top: 7px;
-  font-size: 27px; font-weight: 800; letter-spacing: -.4px; line-height: 1.1;
+  font-size: 27px; font-weight: 800; letter-spacing: -.5px; line-height: 1.1;
 }
-.cifra.destacada > strong { color: var(--acento); }
 .cifra > em { display: block; margin-top: 3px; font-size: 11.5px; font-style: normal; color: var(--ink-3); }
 
-/* -------------------------------------------------------------- grafico -- */
-
 .grafico-card {
-  margin-top: 14px; padding: 16px;
+  margin-top: 14px; padding: 18px;
   border: 1px solid var(--line-soft); border-radius: 18px;
   background: var(--panel);
   box-shadow: var(--shadow);
@@ -99,16 +95,16 @@ h1 {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 12px; flex-wrap: wrap;
 }
-.grafico-head h2 { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+.grafico-head h2 { font-size: 15px; font-weight: 700; letter-spacing: .01em; }
 .rango { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-3); }
 
 .vista {
-  display: inline-flex; gap: 3px; padding: 3px;
+  display: inline-flex; gap: 2px; padding: 3px;
   border: 1px solid var(--line-soft); border-radius: 11px;
   background: var(--panel-2);
 }
 .vista button {
-  min-height: 34px; padding: 0 15px;
+  min-height: 33px; padding: 0 15px;
   border: 0; border-radius: 8px; background: transparent;
   font: inherit; font-size: 12.5px; font-weight: 700;
   color: var(--ink-3); cursor: pointer;
@@ -117,32 +113,29 @@ h1 {
 .vista button:hover { color: var(--ink-2); }
 .vista button.activo { background: var(--acento); color: #ffffff; }
 
-.nota-vista {
-  margin-top: 10px; font-size: 12px; color: var(--ink-3);
-}
+.nota-vista { margin-top: 12px; font-size: 12px; color: var(--ink-3); max-width: 78ch; }
 
-.grafico-wrap { position: relative; margin-top: 14px; height: 320px; }
+.grafico-wrap { position: relative; margin-top: 16px; height: 320px; }
 #grafico { width: 100%; height: 100%; display: block; overflow: visible; touch-action: pan-y; }
 
 .tip {
   position: absolute; z-index: 5; pointer-events: none;
   padding: 9px 11px;
   border: 1px solid var(--line); border-radius: 10px;
-  background: #ffffff; box-shadow: var(--shadow);
+  background: var(--panel); box-shadow: var(--shadow);
   font-size: 12.5px; white-space: nowrap;
 }
-.tip b { display: block; margin-top: 3px; font-size: 15px; color: var(--acento); }
+.tip b { display: block; margin-top: 3px; font-size: 15px; color: var(--ink); }
+.tip .detalle { display: block; margin-top: 3px; font-size: 11.5px; color: var(--ink-3); }
 
 .estado {
   position: absolute; inset: 0;
   display: grid; place-content: center; justify-items: center; gap: 5px;
   text-align: center; padding: 20px;
-  background: rgba(255, 255, 255, .93); border-radius: 12px;
+  background: rgba(255, 255, 255, .94); border-radius: 12px;
 }
 .estado strong { font-size: 15px; color: var(--alerta); }
 .estado span { font-size: 12.5px; color: var(--ink-3); }
-
-/* --------------------------------------------------------- metodologia -- */
 
 .metodologia { margin-top: 14px; }
 .metodologia details {
@@ -151,7 +144,7 @@ h1 {
 }
 .metodologia summary {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  min-height: 46px; padding: 0 16px;
+  min-height: 46px; padding: 0 18px;
   font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ink-2); cursor: pointer; list-style: none;
 }
@@ -161,32 +154,29 @@ h1 {
   stroke-linecap: round; stroke-linejoin: round; transition: transform .2s;
 }
 .metodologia details[open] summary svg { transform: rotate(180deg); }
-.cuerpo { padding: 2px 16px 16px; border-top: 1px solid var(--line-soft); }
+.cuerpo { padding: 2px 18px 18px; border-top: 1px solid var(--line-soft); }
 .cuerpo p { margin-top: 11px; font-size: 13.5px; color: var(--ink-2); max-width: 76ch; }
 .cuerpo b { color: var(--ink); }
 .cuerpo .nota { font-size: 12.5px; color: var(--ink-3); }
 .cuerpo code {
   padding: 1px 5px; border-radius: 5px;
-  background: var(--acento-soft); color: var(--acento);
+  background: var(--acento-soft); color: var(--ink);
   font-size: 12px;
 }
 
-/* ----------------------------------------------------------------- pie -- */
-
 footer {
   display: flex; flex-direction: column; gap: 3px;
-  margin-top: 22px; padding-top: 14px;
+  margin-top: 24px; padding-top: 16px;
   border-top: 1px solid var(--line-soft);
   font-size: 11.5px; color: var(--ink-3);
 }
 
-/* ---------------------------------------------------------- responsive -- */
-
 @media (min-width: 720px) {
-  .cifras { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .cifras { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .cifra.destacada { grid-column: auto; }
   .grafico-wrap { height: 380px; }
   h1 { font-size: 34px; }
-  .shell { padding: 34px 24px 56px; }
+  .shell { padding: 38px 24px 56px; }
   .grafico-card { padding: 22px; }
   footer { flex-direction: row; flex-wrap: wrap; gap: 4px 20px; }
 }
@@ -200,4 +190,3 @@ footer {
 }
 
 :focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 6px; }
-.tip .detalle { display: block; margin-top: 3px; font-size: 11.5px; color: var(--ink-3); }
