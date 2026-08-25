@@ -1,9 +1,3 @@
-"""Frontera publica: falla la corrida si algo privado se cuela al repositorio.
-
-Se ejecuta antes de publicar. Comprueba dos cosas: que solo esten los archivos
-permitidos, y que ninguno contenga rastros del motor privado.
-"""
-
 from __future__ import annotations
 
 import csv
@@ -14,27 +8,17 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
 
-# Durante la corrida, el motor privado se descarga en private/. No es contenido
-# de este repositorio: esta en .gitignore y el commit usa rutas explicitas. Por
-# eso no se lee su contenido; lo que se comprueba es exactamente eso.
 PRIVADO = "private"
 
-# Lo unico que puede vivir en pagina/data
 DATOS_PERMITIDOS = {"ultimos_90_dias.csv", "resumen.json"}
 
-# Columnas admitidas en el CSV publico: solo el agregado diario
 COLUMNAS = ["fecha", "bloqueos"]
 
-# Como se obtienen los datos. Eso vive solo en el motor privado.
-# Los nombres de columna del calculo (latitud, longitud) si pueden aparecer:
-# describen el esquema de entrada, no publican ninguna coordenada. El nombre de
-# una variable de entorno tampoco es un secreto; lo que se vigila es su valor.
 PROHIBIDO = (
     "captcha", "genai", "BeautifulSoup", "requests.Session",
     "api/v1/data", "solve_", "fetch_once", "fetch_events",
 )
 
-# Credenciales de verdad, por su forma
 CLAVES = (
     r"AIza[0-9A-Za-z_-]{30,}",
     r"BEGIN [A-Z ]*PRIVATE KEY",
@@ -43,7 +27,6 @@ CLAVES = (
     r"sk-[A-Za-z0-9]{30,}",
 )
 
-# Archivos crudos que nunca deben aparecer
 EXTENSIONES_PROHIBIDAS = {".jsonl", ".gz", ".zip", ".tar", ".pem", ".key", ".env"}
 
 
@@ -59,7 +42,6 @@ def git(*argumentos: str) -> subprocess.CompletedProcess:
 
 
 def revisar_motor_privado() -> None:
-    """El motor privado puede estar en el disco, nunca en el repositorio."""
     if not (RAIZ / PRIVADO).is_dir():
         return
 
@@ -79,12 +61,6 @@ def revisar_motor_privado() -> None:
 
 
 def revisar_indicador_referencial() -> None:
-    """codigo/indicador.py se publica para leerse, no para correrse.
-
-    La serie sale del motor privado. Si algun dia algo de aqui empezara a
-    importarlo o ejecutarlo, este repositorio dejaria de ser solo un espejo y
-    la corrida falla antes de publicar.
-    """
     objetivo = RAIZ / "codigo" / "indicador.py"
     if not objetivo.is_file():
         fallar("falta codigo/indicador.py")
@@ -135,7 +111,6 @@ def main() -> int:
         if not re.fullmatch(r"\d+", fila[1]):
             fallar(f"valor de bloqueos no entero: {fila}")
 
-    # ningun archivo del repositorio puede contener rastros privados
     for ruta in RAIZ.rglob("*"):
         if not ruta.is_file() or ".git" in ruta.parts or PRIVADO in ruta.parts:
             continue
@@ -143,12 +118,9 @@ def main() -> int:
             fallar(f"archivo de tipo prohibido: {ruta.relative_to(RAIZ)}")
         if ruta.suffix.lower() not in {".py", ".csv", ".json", ".html", ".md", ".yml", ".txt"}:
             continue
-        # las herramientas declaran los terminos prohibidos para poder vigilarlos
         if ruta.parent.name == "herramientas":
             continue
         texto = ruta.read_text(encoding="utf-8", errors="replace")
-        # ${{ secrets.X }} es una referencia, no un valor: GitHub resuelve el
-        # secreto en tiempo de ejecucion y nunca queda escrito aqui.
         texto = re.sub(r"\$\{\{[^}]*\}\}", "", texto)
         colados = [p for p in PROHIBIDO if p.lower() in texto.lower()]
         if colados:

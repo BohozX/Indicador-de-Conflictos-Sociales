@@ -1,22 +1,9 @@
-"""Extrae del motor privado solo la logica de calculo del indicador.
-
-Se ejecuta en cada corrida para que codigo/indicador.py sea siempre un reflejo
-fiel de lo que de verdad se ejecuto, y no una copia que se queda vieja.
-
-Lee el archivo privado, toma unicamente las constantes y funciones que calculan
-el indicador, y deja fuera todo lo relacionado con la obtencion de los datos.
-No modifica el archivo de origen.
-
-    python herramientas/extraer_logica.py <main.py de origen> <destino>
-"""
-
 from __future__ import annotations
 
 import ast
 import sys
 from pathlib import Path
 
-# Lo unico que se publica: el calculo. Nada de red, sesiones ni captcha.
 CONSTANTES = [
     "CONFLICT_STATE",
     "COLUMNS",
@@ -33,7 +20,6 @@ FUNCIONES = [
     "build_daily_series",
 ]
 
-# Si alguno de estos nombres aparece en lo extraido, algo del scraping se colo.
 PROHIBIDO = (
     "requests", "session", "captcha", "genai", "gemini", "BeautifulSoup",
     "API_URL", "BASE_URL", "GEMINI", "urljoin", "solve_", "fetch_",
@@ -71,7 +57,7 @@ import pandas as pd
 
 def main() -> int:
     if len(sys.argv) != 3:
-        print(__doc__)
+        print("uso: extraer_logica.py <main.py de origen> <destino>")
         return 2
 
     origen, destino = Path(sys.argv[1]), Path(sys.argv[2])
@@ -102,13 +88,11 @@ def main() -> int:
     for nombre in FUNCIONES:
         cuerpo += piezas[nombre] + "\n\n\n"
 
-    # comprobacion de frontera: nada del scraping puede haberse colado
     colados = [p for p in PROHIBIDO if p in cuerpo]
     if colados:
         print(f"ERROR: la extraccion arrastro codigo privado: {colados}", file=sys.stderr)
         return 1
 
-    # tiene que ser Python valido por si mismo
     try:
         ast.parse(cuerpo)
     except SyntaxError as exc:

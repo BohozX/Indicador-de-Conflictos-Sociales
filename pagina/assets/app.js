@@ -1,13 +1,6 @@
-/* Indicador de Conflictos Sociales - Bolivia
-   Solo dibuja. Los valores se muestran tal como los publica la serie: aqui no
-   se recalcula, interpola ni completa ningun dia. */
-
 const $ = (s) => document.querySelector(s);
 
 const entero = new Intl.NumberFormat("es-BO", { maximumFractionDigits: 0 });
-const conDecimal = new Intl.NumberFormat("es-BO", {
-  minimumFractionDigits: 1, maximumFractionDigits: 1,
-});
 const diaMes = new Intl.DateTimeFormat("es-BO", {
   timeZone: "UTC", day: "2-digit", month: "short",
 });
@@ -22,9 +15,6 @@ function fecha(iso) {
   return new Date(`${iso}T00:00:00Z`);
 }
 
-/* Agrupa en semanas de lunes a domingo. El valor de la barra es la suma de los
-   puntos bloqueados de cada dia de la semana. No se completa ningun dia: una
-   semana incompleta suma solo los dias observados y se dibuja atenuada. */
 function porSemana(datos) {
   const semanas = new Map();
   datos.forEach((p) => {
@@ -82,13 +72,11 @@ function pintarCifras() {
   const ultimo = serie.at(-1);
   const valores = serie.map((p) => p.bloqueos);
   const conBloqueo = valores.filter((v) => v > 0).length;
-  const promedio = valores.reduce((a, b) => a + b, 0) / valores.length;
 
   $("#c-hoy").textContent = entero.format(ultimo.bloqueos);
   $("#c-hoy-fecha").textContent = diaMes.format(fecha(ultimo.fecha));
   $("#c-max").textContent = entero.format(Math.max(...valores));
   $("#c-dias").textContent = entero.format(conBloqueo);
-  $("#c-prom").textContent = conDecimal.format(promedio);
 
   $("#rango").textContent =
     `${diaMes.format(fecha(serie[0].fecha))} — ${diaMes.format(fecha(ultimo.fecha))}`;
@@ -124,10 +112,12 @@ function dibujar() {
   const y = (v) => base - (v / maximo) * (base - arriba);
 
   const estilo = getComputedStyle(document.documentElement);
-  const acento = estilo.getPropertyValue("--acento").trim() || "#d6a860";
-  const tenue = estilo.getPropertyValue("--ink-3").trim() || "#7d735f";
+  const acento = estilo.getPropertyValue("--acento").trim() || "#111111";
+  const tenue = estilo.getPropertyValue("--ink-3").trim() || "#777777";
+  const rejillaColor = estilo.getPropertyValue("--rejilla").trim() || "rgba(0,0,0,.08)";
+  const ejeColor = estilo.getPropertyValue("--eje").trim() || "rgba(0,0,0,.22)";
+  const guiaColor = estilo.getPropertyValue("--guia").trim() || "rgba(0,0,0,.3)";
 
-  // niveles de referencia
   const rejilla = svg("g");
   const pasos = 4;
   for (let k = 0; k <= pasos; k += 1) {
@@ -135,7 +125,7 @@ function dibujar() {
     const yy = y(valor);
     rejilla.append(svg("line", {
       x1: 0, x2: ancho - der + 4, y1: yy.toFixed(1), y2: yy.toFixed(1),
-      stroke: "rgba(214,168,96,.08)", "stroke-width": 1,
+      stroke: rejillaColor, "stroke-width": 1,
     }));
     const etiqueta = svg("text", {
       x: ancho - der + 9, y: (yy + 3.6).toFixed(1),
@@ -146,7 +136,6 @@ function dibujar() {
   }
   lienzo.append(rejilla);
 
-  // una barra por dia o por semana, segun la vista
   const barras = svg("g");
   const grosor = Math.max(2, Math.min(paso * 0.66, 34));
   datos.forEach((p, i) => {
@@ -156,17 +145,16 @@ function dibujar() {
       x: (x(i) - grosor / 2).toFixed(1), y: yy.toFixed(1),
       width: grosor.toFixed(1), height: Math.max(1.5, base - yy).toFixed(1),
       rx: Math.min(3, grosor / 4), fill: acento,
-      opacity: p.completa === false ? .45 : .88,
+      opacity: p.completa === false ? .32 : 1,
     }));
   });
   lienzo.append(barras);
 
   lienzo.append(svg("line", {
     x1: 0, x2: ancho - der + 4, y1: base, y2: base,
-    stroke: "rgba(214,168,96,.2)", "stroke-width": 1,
+    stroke: ejeColor, "stroke-width": 1,
   }));
 
-  // eje de fechas
   const eje = svg("g");
   const marcas = Math.min(vista === "semana" ? 6 : 5, datos.length);
   for (let k = 0; k < marcas; k += 1) {
@@ -182,7 +170,7 @@ function dibujar() {
 
   const guia = svg("line", {
     id: "guia", y1: arriba - 4, y2: base,
-    stroke: "rgba(242,236,225,.25)", "stroke-width": 1, "stroke-dasharray": "3 3",
+    stroke: guiaColor, "stroke-width": 1, "stroke-dasharray": "3 3",
     visibility: "hidden",
   });
   lienzo.append(guia);

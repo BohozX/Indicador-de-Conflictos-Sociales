@@ -2,17 +2,6 @@ name: Actualizar indicador
 
 on:
   schedule:
-    # GitHub Actions interpreta el cron SIEMPRE en UTC. No existe una clave
-    # "timezone": si se escribe, se ignora en silencio.
-    #
-    # Bolivia es UTC-4 todo el ano, sin horario de verano. Como el desfase es
-    # par y el intervalo es de 2 horas, las horas pares UTC son tambien horas
-    # pares en La Paz: esto dispara 00:27, 02:27, 04:27 ... 22:27 hora de
-    # La Paz, todos los dias. Cambiar a UTC-4 explicito no moveria nada.
-    #
-    # GitHub retrasa las corridas programadas entre 20 y 60 minutos segun su
-    # carga, y bajo mucha carga puede saltarse alguna. La hora exacta no es
-    # garantizable; la cadencia de dos horas si.
     - cron: '27 */2 * * *'
   workflow_dispatch:
 
