@@ -22,10 +22,9 @@ function fecha(iso) {
   return new Date(`${iso}T00:00:00Z`);
 }
 
-/* Agrupa en semanas de lunes a domingo. El valor de la barra es el promedio de
-   puntos bloqueados por dia: mantiene la misma unidad que la vista diaria, asi
-   que las dos vistas se leen en la misma escala. No se inventa ningun dia: una
-   semana incompleta se promedia solo sobre los dias observados. */
+/* Agrupa en semanas de lunes a domingo. El valor de la barra es la suma de los
+   puntos bloqueados de cada dia de la semana. No se completa ningun dia: una
+   semana incompleta suma solo los dias observados y se dibuja atenuada. */
 function porSemana(datos) {
   const semanas = new Map();
   datos.forEach((p) => {
@@ -45,7 +44,7 @@ function porSemana(datos) {
     return {
       fecha: lunes,
       hasta: domingo.toISOString().slice(0, 10),
-      bloqueos: suma / valores.length,
+      bloqueos: suma,
       maximo: Math.max(...valores),
       dias: valores.length,
       diasConBloqueo: valores.filter((v) => v > 0).length,
@@ -221,8 +220,8 @@ function mostrarTip(evento) {
     const parcial = punto.completa ? "" : ` · semana parcial (${punto.dias} d)`;
     tip.innerHTML =
       `Semana del ${rotulo}${parcial}` +
-      `<b>${conDecimal.format(punto.bloqueos)} puntos/día</b>` +
-      `<span class="detalle">máximo ${entero.format(punto.maximo)} · ` +
+      `<b>${entero.format(punto.bloqueos)} en la semana</b>` +
+      `<span class="detalle">máximo ${entero.format(punto.maximo)} en un día · ` +
       `${punto.diasConBloqueo} de ${punto.dias} días con bloqueo</span>`;
   } else {
     tip.innerHTML =

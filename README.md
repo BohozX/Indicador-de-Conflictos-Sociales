@@ -31,10 +31,10 @@ si se cierra en la primera observación del día, ese día no cuenta.
 Solo se consideran los reportes cuyo estado corresponde a un tramo no
 transitable por conflictos sociales, con fecha y coordenadas válidas.
 
-En la vista semanal, las semanas van de **lunes a domingo** y cada barra es el
-**promedio de puntos bloqueados por día** de esa semana, para que ambas vistas
-se lean en la misma escala. Las semanas incompletas de los extremos se dibujan
-atenuadas y se promedian solo sobre los días observados.
+En la vista semanal, las semanas van de **lunes a domingo** y cada barra es la
+**suma de los puntos bloqueados de cada día** de esa semana. Las semanas
+incompletas de los extremos se dibujan atenuadas y suman solo los días
+observados.
 
 ## Sobre el código publicado
 
