@@ -1,11 +1,3 @@
-"""Prepara los datos que consume la pagina publica.
-
-Toma la serie diaria ya calculada por el motor y recorta los ultimos 90 dias.
-No recalcula nada: publica exactamente los valores que produjo el motor.
-
-    python herramientas/preparar_publico.py <bloqueos_historico.csv> <carpeta destino>
-"""
-
 from __future__ import annotations
 
 import csv
@@ -19,7 +11,7 @@ DIAS = 90
 
 def main() -> int:
     if len(sys.argv) != 3:
-        print(__doc__)
+        print("uso: preparar_publico.py <bloqueos_historico.csv> <carpeta destino>")
         return 2
 
     origen, destino = Path(sys.argv[1]), Path(sys.argv[2])
@@ -64,7 +56,6 @@ def main() -> int:
 
 
 def escribir(ruta: Path, datos: bytes) -> None:
-    """Solo escribe si cambio, para no generar commits vacios."""
     if ruta.exists() and ruta.read_bytes() == datos:
         return
     ruta.write_bytes(datos)
