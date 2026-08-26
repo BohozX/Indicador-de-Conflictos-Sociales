@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from preparar_publico import DIAS
+
 RAIZ = Path(__file__).resolve().parents[1]
 
 PRIVADO = "private"
@@ -103,7 +105,7 @@ def main() -> int:
         filas = list(lector)
     if cabecera != COLUMNAS:
         fallar(f"el CSV publico debe tener columnas {COLUMNAS}, tiene {cabecera}")
-    if not 1 <= len(filas) <= 95:
+    if not 1 <= len(filas) <= DIAS + 5:
         fallar(f"el CSV publico tiene {len(filas)} filas, fuera del rango esperado")
     for fila in filas:
         if len(fila) != 2 or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", fila[0]):

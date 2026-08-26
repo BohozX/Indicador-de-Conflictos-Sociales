@@ -78,6 +78,12 @@ function pintarCifras() {
   $("#c-max").textContent = entero.format(Math.max(...valores));
   $("#c-dias").textContent = entero.format(conBloqueo);
 
+  const n = serie.length;
+  $("#r-max").textContent = `Máximo en ${n} días`;
+  $("#r-dias").textContent = `de los últimos ${n}`;
+  $("#r-titulo").textContent = `Últimos ${n} días`;
+  $("#grafico").setAttribute("aria-label", `Bloqueos diarios de los últimos ${n} días`);
+
   $("#rango").textContent =
     `${diaMes.format(fecha(serie[0].fecha))} — ${diaMes.format(fecha(ultimo.fecha))}`;
   $("#pie-actualizado").textContent =

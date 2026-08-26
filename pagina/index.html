@@ -7,7 +7,7 @@
     <meta name="description" content="Bloqueos de carreteras por conflictos sociales en Bolivia, últimos 90 días, a partir de los reportes de transitabilidad de la ABC.">
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="#f4f2ed">
-    <link rel="stylesheet" href="assets/styles.css?v=5">
+    <link rel="stylesheet" href="assets/styles.css?v=6">
   </head>
   <body>
     <div class="shell">
@@ -28,21 +28,21 @@
           <em id="c-hoy-fecha"></em>
         </article>
         <article class="cifra">
-          <span>Máximo en 90 días</span>
+          <span id="r-max">Máximo en 90 días</span>
           <strong id="c-max">—</strong>
           <em>puntos en un solo día</em>
         </article>
         <article class="cifra">
           <span>Días con bloqueo</span>
           <strong id="c-dias">—</strong>
-          <em>de los últimos 90</em>
+          <em id="r-dias">de los últimos 90</em>
         </article>
       </section>
 
       <section class="grafico-card">
         <div class="grafico-head">
           <div>
-            <h2>Últimos 90 días</h2>
+            <h2 id="r-titulo">Últimos 90 días</h2>
             <span class="rango" id="rango">—</span>
           </div>
           <div class="vista" id="vista" role="group" aria-label="Agrupación">
@@ -99,6 +99,6 @@
       </footer>
     </div>
 
-    <script src="assets/app.js?v=5" defer></script>
+    <script src="assets/app.js?v=6" defer></script>
   </body>
 </html>
