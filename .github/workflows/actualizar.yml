@@ -122,6 +122,8 @@ jobs:
       - name: Guardar los cambios publicos
         if: steps.ejecutar.outcome == 'success'
         shell: bash
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           if [ -z "$(git status --porcelain pagina/data codigo)" ]; then
@@ -132,7 +134,7 @@ jobs:
           git config user.email "283808960+BohozX@users.noreply.github.com"
           git add pagina/data codigo
           git commit -m "Actualizacion automatica"
-          git push
+          git push "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
 
       - name: Configurar Pages
         if: steps.ejecutar.outcome == 'success'
