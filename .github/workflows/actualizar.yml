@@ -3,7 +3,7 @@ name: Actualizar indicador
 on:
   schedule:
     # UTC. Cada dos horas, alejado del inicio de hora congestionado.
-    - cron: "29 */2 * * *"
+    - cron: "23 */2 * * *"
   workflow_dispatch:
 
 permissions:
