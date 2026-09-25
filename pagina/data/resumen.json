@@ -1,9 +1,9 @@
 {
  "dias": 90,
- "desde": "2026-06-27",
- "hasta": "2026-09-24",
+ "desde": "2026-06-28",
+ "hasta": "2026-09-25",
  "ultimo_valor": 0,
  "maximo": 3,
- "dias_con_bloqueo": 15,
- "suma_dias_bloqueo": 24
+ "dias_con_bloqueo": 14,
+ "suma_dias_bloqueo": 23
 }
