@@ -2,8 +2,8 @@
  "dias": 90,
  "desde": "2026-07-10",
  "hasta": "2026-10-07",
- "ultimo_valor": 2,
+ "ultimo_valor": 3,
  "maximo": 3,
  "dias_con_bloqueo": 17,
- "suma_dias_bloqueo": 27
+ "suma_dias_bloqueo": 28
 }
