@@ -1,18 +1,22 @@
 from __future__ import annotations
 
 import csv
+import json
 import re
 import subprocess
 import sys
 from pathlib import Path
 
-from preparar_publico import DIAS
+from preparar_publico import COLUMNAS_PUNTOS, DEPARTAMENTOS, DIAS
 
 RAIZ = Path(__file__).resolve().parents[1]
 
 PRIVADO = "private"
 
-DATOS_PERMITIDOS = {"ultimos_90_dias.csv", "resumen.json"}
+DATOS_PERMITIDOS = {
+    "ultimos_90_dias.csv", "resumen.json", "departamentos_90_dias.csv",
+    "puntos_90_dias.csv", "departamentos.geojson",
+}
 
 COLUMNAS = ["fecha", "bloqueos"]
 
@@ -112,13 +116,68 @@ def main() -> int:
             fallar(f"fila con formato inesperado: {fila}")
         if not re.fullmatch(r"\d+", fila[1]):
             fallar(f"valor de bloqueos no entero: {fila}")
+    nacional = {f[0]: int(f[1]) for f in filas}
+
+    with (datos / "departamentos_90_dias.csv").open(encoding="utf-8", newline="") as fh:
+        lector = csv.reader(fh)
+        cabecera = next(lector, [])
+        filas_dep = list(lector)
+    if cabecera != ["fecha", *DEPARTAMENTOS]:
+        fallar(f"departamentos_90_dias.csv tiene columnas {cabecera}")
+    if [f[0] for f in filas_dep] != [f[0] for f in filas]:
+        fallar("departamentos_90_dias.csv no cubre los mismos dias que la serie nacional")
+    for fila in filas_dep:
+        if len(fila) != len(cabecera) or not all(re.fullmatch(r"\d+", v) for v in fila[1:]):
+            fallar(f"fila de departamentos con formato inesperado: {fila}")
+        if sum(int(v) for v in fila[1:]) != nacional[fila[0]]:
+            fallar(f"los departamentos no suman el total nacional el {fila[0]}")
+
+    with (datos / "puntos_90_dias.csv").open(encoding="utf-8", newline="") as fh:
+        lector = csv.reader(fh)
+        cabecera = next(lector, [])
+        filas_pts = list(lector)
+    if cabecera != COLUMNAS_PUNTOS:
+        fallar(f"puntos_90_dias.csv tiene columnas {cabecera}")
+    vistos = set()
+    conteo = {}
+    for fila in filas_pts:
+        if len(fila) != len(COLUMNAS_PUNTOS) or fila[0] not in nacional:
+            fallar(f"punto con formato o fecha inesperados: {fila}")
+        if fila[3] not in DEPARTAMENTOS[:-1]:
+            fallar(f"punto con departamento desconocido: {fila}")
+        try:
+            lat, lon = float(fila[1]), float(fila[2])
+        except ValueError:
+            fallar(f"punto con coordenadas no numericas: {fila}")
+        if not (-23.5 <= lat <= -9.5 and -70 <= lon <= -57.4):
+            fallar(f"punto fuera de Bolivia: {fila}")
+        if (fila[0], lat, lon) in vistos:
+            fallar(f"punto repetido el mismo dia: {fila}")
+        vistos.add((fila[0], lat, lon))
+        conteo[(fila[0], fila[3])] = conteo.get((fila[0], fila[3]), 0) + 1
+    for fila in filas_dep:
+        for departamento, valor in zip(DEPARTAMENTOS[:-1], fila[1:-1]):
+            if conteo.get((fila[0], departamento), 0) != int(valor):
+                fallar(f"puntos_90_dias.csv no cuadra con {departamento} el {fila[0]}")
+
+    geo = json.loads((datos / "departamentos.geojson").read_text(encoding="utf-8"))
+    if set(geo) != {"type", "features"}:
+        fallar(f"departamentos.geojson con claves inesperadas: {sorted(geo)}")
+    for f in geo["features"]:
+        if set(f) != {"type", "properties", "geometry"} or set(f["properties"]) != {"id", "nombre"}:
+            fallar(f"departamentos.geojson con propiedades inesperadas: {sorted(f['properties'])}")
+        if set(f["geometry"]) != {"type", "coordinates"} or f["geometry"]["type"] not in {"Polygon", "MultiPolygon"}:
+            fallar("departamentos.geojson con geometria inesperada")
+    ids = sorted(f["properties"]["id"] for f in geo["features"])
+    if ids != sorted(DEPARTAMENTOS[:-1]):
+        fallar(f"departamentos.geojson no tiene los 9 departamentos: {ids}")
 
     for ruta in RAIZ.rglob("*"):
         if not ruta.is_file() or ".git" in ruta.parts or PRIVADO in ruta.parts:
             continue
         if ruta.suffix.lower() in EXTENSIONES_PROHIBIDAS:
             fallar(f"archivo de tipo prohibido: {ruta.relative_to(RAIZ)}")
-        if ruta.suffix.lower() not in {".py", ".csv", ".json", ".html", ".md", ".yml", ".txt"}:
+        if ruta.suffix.lower() not in {".py", ".csv", ".json", ".geojson", ".html", ".md", ".yml", ".txt", ".js", ".css"}:
             continue
         if ruta.parent.name == "herramientas":
             continue
@@ -131,7 +190,8 @@ def main() -> int:
             if re.search(patron, texto):
                 fallar(f"{ruta.relative_to(RAIZ)} parece contener una credencial")
 
-    print(f"[OK] frontera publica intacta: {len(filas)} dias, sin rastros privados")
+    print(f"[OK] frontera publica intacta: {len(filas)} dias, {len(filas_pts)} puntos-dia, "
+          "departamentos cuadrados, sin rastros privados")
     return 0
 
 

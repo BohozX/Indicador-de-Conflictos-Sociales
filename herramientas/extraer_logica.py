@@ -17,12 +17,15 @@ FUNCIONES = [
     "remove_exact_duplicates",
     "observable_activities",
     "episode_start_days",
+    "build_point_days",
+    "count_point_days",
     "build_daily_series",
 ]
 
 PROHIBIDO = (
     "requests", "session", "captcha", "genai", "gemini", "BeautifulSoup",
     "API_URL", "BASE_URL", "GEMINI", "urljoin", "solve_", "fetch_",
+    "department", "DEPARTMENT", "UNLOCATED", "BORDER_KM", "inside_", "polygon", "geojson",
 )
 
 CABECERA = '''"""Calculo del indicador de conflictos sociales en carreteras de Bolivia.

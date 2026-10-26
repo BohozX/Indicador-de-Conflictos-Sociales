@@ -7,7 +7,8 @@
     <meta name="description" content="Bloqueos de carreteras por conflictos sociales en Bolivia, últimos 90 días, a partir de los reportes de transitabilidad de la ABC.">
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="#f4f2ed">
-    <link rel="stylesheet" href="assets/styles.css?v=6">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="assets/styles.css?v=7">
   </head>
   <body>
     <div class="shell">
@@ -21,9 +22,25 @@
         </p>
       </header>
 
+      <section class="territorios" aria-label="Territorio">
+        <span class="etiqueta">Territorio</span>
+        <div class="chips" id="territorios" role="group" aria-label="Seleccionar territorio">
+          <button class="activo" type="button" data-territorio="bolivia" aria-pressed="true">Bolivia</button>
+          <button type="button" data-territorio="beni" aria-pressed="false">Beni</button>
+          <button type="button" data-territorio="chuquisaca" aria-pressed="false">Chuquisaca</button>
+          <button type="button" data-territorio="cochabamba" aria-pressed="false">Cochabamba</button>
+          <button type="button" data-territorio="la_paz" aria-pressed="false">La Paz</button>
+          <button type="button" data-territorio="oruro" aria-pressed="false">Oruro</button>
+          <button type="button" data-territorio="pando" aria-pressed="false">Pando</button>
+          <button type="button" data-territorio="potosi" aria-pressed="false">Potosí</button>
+          <button type="button" data-territorio="santa_cruz" aria-pressed="false">Santa Cruz</button>
+          <button type="button" data-territorio="tarija" aria-pressed="false">Tarija</button>
+        </div>
+      </section>
+
       <section class="cifras" id="cifras" aria-live="polite">
         <article class="cifra destacada">
-          <span>Bloqueos hoy</span>
+          <span id="r-hoy">Bloqueos hoy · Bolivia</span>
           <strong id="c-hoy">—</strong>
           <em id="c-hoy-fecha"></em>
         </article>
@@ -33,7 +50,7 @@
           <em>puntos en un solo día</em>
         </article>
         <article class="cifra">
-          <span>Días con bloqueo</span>
+          <span id="r-con-bloqueo">Días con bloqueo · Bolivia</span>
           <strong id="c-dias">—</strong>
           <em id="r-dias">de los últimos 90</em>
         </article>
@@ -53,8 +70,9 @@
         <p class="nota-vista" id="nota-vista" hidden>
           Cada barra suma los puntos bloqueados de cada día de la semana, de lunes a domingo. Las semanas incompletas de los extremos se dibujan atenuadas.
         </p>
+        <p class="nota-vista" id="nota-dia">Toca un día para verlo en el mapa y el panel. Con el gráfico enfocado, usa las flechas para cambiar de día.</p>
         <div class="grafico-wrap" id="grafico-wrap">
-          <svg id="grafico" role="img" aria-label="Bloqueos diarios de los últimos 90 días"></svg>
+          <svg id="grafico" role="img" tabindex="0" aria-describedby="nota-dia" aria-label="Bloqueos diarios de los últimos 90 días"></svg>
           <div class="tip" id="tip" hidden></div>
           <div class="estado" id="estado" hidden>
             <strong id="estado-titulo">Datos no disponibles</strong>
@@ -62,6 +80,44 @@
           </div>
         </div>
       </section>
+
+      <div class="territorial">
+        <section class="mapa-card" aria-labelledby="mapa-titulo">
+          <div class="grafico-head">
+            <h2 id="mapa-titulo">Bloqueos · Bolivia</h2>
+            <div class="vista" id="modo-mapa" role="group" aria-label="Período del mapa">
+              <button class="activo" type="button" data-modo="dia" aria-pressed="true">Día</button>
+              <button type="button" data-modo="ventana" aria-pressed="false">90 días</button>
+            </div>
+          </div>
+          <div class="mapa-fecha" role="group" aria-label="Día seleccionado">
+            <button id="dia-anterior" type="button" aria-label="Día anterior" disabled>‹</button>
+            <span id="mapa-fecha" aria-live="polite">Cargando fecha…</span>
+            <button id="dia-siguiente" type="button" aria-label="Día siguiente" disabled>›</button>
+          </div>
+          <div class="mapa-wrap">
+            <div id="mapa" role="region" aria-label="Mapa de bloqueos por departamento de Bolivia"></div>
+            <div class="mapa-aviso" id="mapa-aviso" role="status">
+              <span id="mapa-aviso-texto">Cargando mapa…</span>
+              <button id="ver-ventana" type="button" hidden>Ver 90 días</button>
+            </div>
+          </div>
+          <p class="mapa-leyenda" id="mapa-leyenda">Relleno: bloqueos del día · Círculos: puntos bloqueados</p>
+          <p class="nota-vista" id="mapa-error" role="status" hidden></p>
+        </section>
+
+        <section class="departamentos-card" aria-labelledby="departamentos-titulo">
+          <div class="grafico-head">
+            <div>
+              <h2 id="departamentos-titulo">Por departamento</h2>
+              <span class="rango" id="panel-fecha">—</span>
+            </div>
+          </div>
+          <p class="panel-ayuda">Puntos del día / puntos-día en 90 días. Barras: total de 90 días.</p>
+          <div id="departamentos"><p class="nota-vista">Cargando departamentos…</p></div>
+          <p class="sin-ubicacion" id="sin-ubicacion" hidden></p>
+        </section>
+      </div>
 
       <section class="metodologia">
         <details>
@@ -82,6 +138,7 @@
               Solo se consideran los reportes cuyo estado corresponde a un tramo no
               transitable por conflictos sociales, con fecha y coordenadas válidas.
             </p>
+            <p>Cada punto se asigna a un departamento ubicando su coordenada dentro de los límites departamentales de GeoBolivia. Si cae fuera del país a menos de 5 km del borde (pasos fronterizos), se asigna al departamento más cercano. Los puntos que la ABC publica sin coordenadas válidas cuentan en el total nacional, pero no en ningún departamento.</p>
             <p class="nota">
               En <code>codigo/indicador.py</code> de este mismo repositorio puede leerse
               la lógica exacta de este cálculo. Es una copia de referencia, publicada para
@@ -96,9 +153,11 @@
         <span>Fuente: Administradora Boliviana de Carreteras (ABC) · reportes públicos de transitabilidad</span>
         <span id="pie-actualizado">—</span>
         <span>Proyecto independiente. No es una publicación oficial de la ABC.</span>
+        <span>Límites departamentales: GeoBolivia (dominio público), vía geoBoundaries · Mapa base © colaboradores de OpenStreetMap</span>
       </footer>
     </div>
 
-    <script src="assets/app.js?v=6" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+    <script src="assets/app.js?v=7" defer></script>
   </body>
 </html>

@@ -54,9 +54,21 @@ h1 {
 
 .intro { margin-top: 12px; max-width: 62ch; font-size: 14.5px; color: var(--ink-2); }
 
+.territorios { margin-top: 24px; }
+.etiqueta { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+.chips button {
+  min-height: 44px; padding: 0 14px;
+  border: 1px solid var(--line); border-radius: 24px;
+  background: var(--panel); color: var(--ink-2);
+  font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+}
+.chips button:hover { background: var(--acento-soft); }
+.chips button.activo { background: var(--acento); border-color: var(--acento); color: #ffffff; }
+
 .cifras {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px; margin-top: 28px;
+  gap: 10px; margin-top: 18px;
 }
 
 .cifra {
@@ -84,7 +96,7 @@ h1 {
 }
 .cifra > em { display: block; margin-top: 3px; font-size: 11.5px; font-style: normal; color: var(--ink-3); }
 
-.grafico-card {
+.grafico-card, .mapa-card, .departamentos-card {
   margin-top: 14px; padding: 18px;
   border: 1px solid var(--line-soft); border-radius: 18px;
   background: var(--panel);
@@ -123,7 +135,7 @@ h1 {
   padding: 9px 11px;
   border: 1px solid var(--line); border-radius: 10px;
   background: var(--panel); box-shadow: var(--shadow);
-  font-size: 12.5px; white-space: nowrap;
+  font-size: 12.5px; max-width: calc(100% - 8px); overflow-wrap: anywhere;
 }
 .tip b { display: block; margin-top: 3px; font-size: 15px; color: var(--ink); }
 .tip .detalle { display: block; margin-top: 3px; font-size: 11.5px; color: var(--ink-3); }
@@ -136,6 +148,53 @@ h1 {
 }
 .estado strong { font-size: 15px; color: var(--alerta); }
 .estado span { font-size: 12.5px; color: var(--ink-3); }
+
+.territorial { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 14px; }
+.mapa-card, .departamentos-card { min-width: 0; margin-top: 0; }
+.mapa-fecha { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0; }
+.mapa-fecha span { font-size: 12px; text-align: center; color: var(--ink-2); }
+.mapa-fecha button {
+  flex: 0 0 44px; min-height: 44px;
+  border: 1px solid var(--line); border-radius: 9px;
+  background: var(--panel-2); color: var(--ink); font: inherit; font-size: 25px; cursor: pointer;
+}
+button:disabled { opacity: .35; cursor: default; }
+.mapa-wrap { position: relative; isolation: isolate; }
+#mapa { height: 360px; width: 100%; border: 1px solid var(--line-soft); border-radius: 10px; background: var(--panel-2); }
+.mapa-aviso {
+  position: absolute; z-index: 800; left: 54px; right: 10px; top: 10px;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 7px 12px;
+  padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px;
+  background: rgba(255, 255, 255, .96); box-shadow: var(--shadow);
+  color: var(--ink-2); font-size: 12px; text-align: center;
+}
+.mapa-aviso button {
+  min-height: 44px; padding: 0 12px; border: 0; border-radius: 8px;
+  background: var(--acento); color: #ffffff; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.mapa-leyenda, .panel-ayuda, .sin-ubicacion { margin-top: 12px; font-size: 11.5px; color: var(--ink-3); }
+.mapa-leyenda::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--alerta); }
+.leaflet-container { font-family: inherit; font-size: 12px; }
+#mapa .leaflet-tile-pane { filter: grayscale(1) contrast(.82) brightness(1.08); opacity: .72; }
+.leaflet-container .leaflet-popup-content { margin: 12px 16px; line-height: 1.55; overflow-wrap: anywhere; }
+.leaflet-popup-content strong { display: block; margin-bottom: 5px; color: var(--ink); }
+.leaflet-container .leaflet-control-attribution { font-size: 9px; }
+.leaflet-container a { color: var(--ink-2); }
+.leaflet-container a:focus-visible { outline: 2px solid var(--acento); outline-offset: -3px; }
+#departamentos { margin-top: 10px; }
+.departamento {
+  width: 100%; min-height: 49px; display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 8px; padding: 9px 10px; margin-top: 3px;
+  border: 1px solid transparent; border-radius: 9px;
+  background: transparent; color: var(--ink-2); font: inherit; font-size: 12px; text-align: left; cursor: pointer;
+}
+.departamento:hover { background: var(--panel-2); }
+.departamento.activo { background: var(--acento-soft); border-color: var(--line); color: var(--ink); }
+.departamento-nombre { font-weight: 600; }
+.departamento-valores { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.departamento-valores b { color: var(--ink); }
+.departamento-barra { grid-column: 1 / -1; height: 4px; border-radius: 4px; background: var(--line-soft); overflow: hidden; }
+.departamento-barra > span { display: block; height: 100%; border-radius: inherit; background: var(--alerta); opacity: .65; }
 
 .metodologia { margin-top: 14px; }
 .metodologia details {
@@ -177,12 +236,20 @@ footer {
   .grafico-wrap { height: 380px; }
   h1 { font-size: 34px; }
   .shell { padding: 38px 24px 56px; }
-  .grafico-card { padding: 22px; }
+  .grafico-card, .mapa-card, .departamentos-card { padding: 22px; }
+  #mapa { height: 480px; }
   footer { flex-direction: row; flex-wrap: wrap; gap: 4px 20px; }
 }
 
 @media (min-width: 1024px) {
   .grafico-wrap { height: 420px; }
+  .territorial { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: stretch; }
+}
+
+@media (pointer: coarse) {
+  .vista button { min-height: 44px; }
+  .leaflet-touch .leaflet-bar a { width: 40px; height: 40px; line-height: 40px; }
+  #mapa, #mapa .leaflet-container, #mapa .leaflet-pane, #mapa .leaflet-interactive { touch-action: pan-y; }
 }
 
 @media (prefers-reduced-motion: reduce) {

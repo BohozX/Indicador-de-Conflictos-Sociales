@@ -156,7 +156,7 @@ def episode_start_days(data):
     return starts
 
 
-def build_daily_series(df, start_date, end_date):
+def build_point_days(df, start_date, end_date):
     """Calcula solo el rango solicitado usando la metodología histórica final.
 
     Reglas:
@@ -173,8 +173,9 @@ def build_daily_series(df, start_date, end_date):
     effective_starts = episode_start_days(data)
     start = max(pd.Timestamp(start_date).normalize(), INDICATOR_START)
     end = pd.Timestamp(end_date).normalize()
+    point_days = {}
     if end < start:
-        return pd.DataFrame(columns=["fecha", "bloqueos"])
+        return start, end, point_days
 
     conflicts = data.loc[
         data["estado"].astype("string").str.strip().str.lower().eq(CONFLICT_STATE)
@@ -183,7 +184,6 @@ def build_daily_series(df, start_date, end_date):
         & data["longitud"].notna()
     ].copy()
 
-    point_days = set()
     for row in conflicts.itertuples(index=True):
         report = pd.Timestamp(row.fecha_reporte).floor("s")
         repday = effective_starts.get(row.Index, report.normalize())
@@ -220,8 +220,16 @@ def build_daily_series(df, start_date, end_date):
         begin = max(repday, start)
         stop = min(last, end)
         if stop >= begin:
+            section = conflicts.at[row.Index, "sección"]
             for day in pd.date_range(begin, stop, freq="D"):
-                point_days.add((day.normalize(), lat, lon))
+                point_days.setdefault((day.normalize(), lat, lon), section)
+
+    return start, end, point_days
+
+
+def count_point_days(point_days, start, end):
+    if end < start:
+        return pd.DataFrame(columns=["fecha", "bloqueos"])
 
     counts = defaultdict(int)
     for day, lat, lon in point_days:
@@ -234,3 +242,8 @@ def build_daily_series(df, start_date, end_date):
             "bloqueos": [int(counts.get(day.normalize(), 0)) for day in dates],
         }
     )
+
+
+def build_daily_series(df, start_date, end_date):
+    start, end, point_days = build_point_days(df, start_date, end_date)
+    return count_point_days(point_days, start, end)
