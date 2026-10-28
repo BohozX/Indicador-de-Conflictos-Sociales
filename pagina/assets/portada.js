@@ -35,7 +35,7 @@
   let deptos = [], rutas = [], bloqueos = [], particulas = [];
   let geo = null, puntos = [];
   let cinta = null, cintaAncho = 0;
-  const ALTO_CINTA = 44;
+  const ALTO_CINTA = 44, ESTIRA = 1.6, FRANJA_CINTA = ALTO_CINTA * ESTIRA;
   const raton = { x: -9999, y: -9999, fuerza: 0, dentro: false };
   const cl = Math.cos(16.5 * Math.PI / 180);
   const proyectar = ([lon, lat]) => [origen[0] + (lon + 69.7) * cl * escala, origen[1] + (-9.6 - lat) * escala];
@@ -48,9 +48,9 @@
     lienzo.height = Math.max(1, Math.round(alto * dpr));
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     const anchoMapa = (69.7 - 57.4) * cl, altoMapa = 22.9 - 9.6;
-    const franja = alto - 2 * (ALTO_CINTA + 10);
+    const franja = alto - 2 * (FRANJA_CINTA + 8);
     escala = Math.min(franja / altoMapa, ancho * .92 / anchoMapa);
-    origen = [(ancho - anchoMapa * escala) / 2, ALTO_CINTA + 10 + (franja - altoMapa * escala) / 2];
+    origen = [(ancho - anchoMapa * escala) / 2, FRANJA_CINTA + 8 + (franja - altoMapa * escala) / 2];
   }
 
   function curva(a, b, k) {
@@ -174,10 +174,10 @@
     if (cinta) {
       c.globalAlpha = .5;
       const c1 = -((t * 9) % cintaAncho), c2 = ((t * 6) % cintaAncho) - cintaAncho;
-      c.drawImage(cinta, c1, 3);
-      c.drawImage(cinta, c1 + cintaAncho, 3);
-      c.drawImage(cinta, c2, alto - ALTO_CINTA);
-      c.drawImage(cinta, c2 + cintaAncho, alto - ALTO_CINTA);
+      c.drawImage(cinta, c1, 3, cintaAncho, FRANJA_CINTA);
+      c.drawImage(cinta, c1 + cintaAncho, 3, cintaAncho, FRANJA_CINTA);
+      c.drawImage(cinta, c2, alto - FRANJA_CINTA, cintaAncho, FRANJA_CINTA);
+      c.drawImage(cinta, c2 + cintaAncho, alto - FRANJA_CINTA, cintaAncho, FRANJA_CINTA);
       c.globalAlpha = 1;
     }
 
@@ -252,6 +252,7 @@
   let espera = 0;
   addEventListener("resize", () => { clearTimeout(espera); espera = setTimeout(() => { armar(); if (quieto) cuadro(0, 0); }, 150); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (ancho) armarCinta(); });
+  if ("ResizeObserver" in window) new ResizeObserver(() => { clearTimeout(espera); espera = setTimeout(() => { if (rutas.length) { armar(); if (quieto) cuadro(0, 0); } }, 150); }).observe(zona);
 
   const leer = (texto) => {
     const [cab, ...filas] = texto.replace(/^﻿/, "").trim().split(/\r?\n/);
