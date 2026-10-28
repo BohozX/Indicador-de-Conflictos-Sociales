@@ -1,12 +1,181 @@
 const $ = (s) => document.querySelector(s);
 
-const entero = new Intl.NumberFormat("es-BO", { maximumFractionDigits: 0 });
-const diaMes = new Intl.DateTimeFormat("es-BO", {
-  timeZone: "UTC", day: "2-digit", month: "short",
-});
-const diaCompleto = new Intl.DateTimeFormat("es-BO", {
-  timeZone: "UTC", weekday: "long", day: "2-digit", month: "long", year: "numeric",
-});
+const diccionario = { en: {
+  "Entorno sociopolítico · Bolivia": "Sociopolitical environment · Bolivia",
+  "Bloqueos de carreteras por conflictos sociales en Bolivia, día a día y por departamento, y un índice de incertidumbre a partir de medios de prensa bolivianos.": "Road blockades caused by social conflicts in Bolivia, day by day and by department, and an uncertainty index based on Bolivian news outlets.",
+  "Inicio": "Home",
+  "Secciones": "Sections",
+  "Idioma": "Language",
+  "Por departamento": "By department",
+  "Incertidumbre": "Uncertainty",
+  "Indicador de Conflictos Sociales": "Social Conflict Indicator",
+  "Conflictos": "Conflicts",
+  "Entorno sociopolítico": "Sociopolitical environment",
+  "Bloqueos hoy · Bolivia": "Blockades today · Bolivia",
+  "Máximo en 90 días": "Maximum in 90 days",
+  "puntos en un solo día": "points in a single day",
+  "Días con bloqueo · Bolivia": "Days with blockades · Bolivia",
+  "de los últimos 90": "of the last 90",
+  "Noticias registradas": "News recorded",
+  "Red vial fundamental": "Main road network",
+  "Territorio": "Territory",
+  "Seleccionar territorio": "Select territory",
+  "Últimos 90 días": "Last 90 days",
+  "Agrupación": "Grouping",
+  "Diario": "Daily",
+  "Semanal": "Weekly",
+  "Cada barra suma los puntos bloqueados de lunes a domingo; las semanas incompletas van atenuadas.": "Each bar adds up the blocked points from Monday to Sunday; incomplete weeks are faded.",
+  "Toca un día para verlo en el mapa.": "Tap a day to see it on the map.",
+  "Bloqueos diarios de los últimos 90 días": "Daily blockades in the last 90 days",
+  "Datos no disponibles": "Data not available",
+  "No fue posible cargar la serie.": "Could not load the series.",
+  "Bloqueos · Bolivia": "Blockades · Bolivia",
+  "Período del mapa": "Map period",
+  "Día": "Day",
+  "90 días": "90 days",
+  "Día seleccionado": "Selected day",
+  "Día anterior": "Previous day",
+  "Día siguiente": "Next day",
+  "Cargando fecha…": "Loading date…",
+  "Mapa de bloqueos por departamento de Bolivia": "Map of blockades by department in Bolivia",
+  "Cargando mapa…": "Loading map…",
+  "Ver 90 días": "See 90 days",
+  "Relleno: bloqueos del día · Círculos: puntos bloqueados": "Fill: blockades on the day · Circles: blocked points",
+  "Puntos del día / puntos-día en 90 días": "Points on the day / point-days in 90 days",
+  "Cargando departamentos…": "Loading departments…",
+  "Metodología": "Methodology",
+  "Fuente: Administradora Boliviana de Carreteras (ABC), reportes públicos de transitabilidad · Límites: GeoBolivia": "Source: Bolivian Road Administration (ABC), public road condition reports · Boundaries: GeoBolivia",
+  "En construcción": "Under construction",
+  "Índice de Incertidumbre": "Uncertainty Index",
+  "Últimos 7 días": "Last 7 days",
+  "Medios": "Outlets",
+  "prensa, radio y televisión": "press, radio and television",
+  "Nuevas en la última actualización": "New in the latest update",
+  "Noticias por día": "News per day",
+  "Noticias registradas por día": "News recorded per day",
+  "Por medio": "By outlet",
+  "últimos 7 días": "last 7 days",
+  "Últimos titulares": "Latest headlines",
+  "Fuente: medios de prensa bolivianos": "Source: Bolivian news outlets",
+  "Bloqueos hoy · {territorio}": "Blockades today · {territorio}",
+  "Días con bloqueo · {territorio}": "Days with blockades · {territorio}",
+  "Máximo en {n} días · {territorio}": "Maximum in {n} days · {territorio}",
+  "de los últimos {n}": "of the last {n}",
+  "Últimos {n} días · {territorio}": "Last {n} days · {territorio}",
+  "Bloqueos diarios de los últimos {n} días · {territorio}": "Daily blockades in the last {n} days · {territorio}",
+  "Bloqueos semanales de los últimos {n} días · {territorio}": "Weekly blockades in the last {n} days · {territorio}",
+  "Última actualización: {fecha}": "Last update: {fecha}",
+  "Fecha de actualización no disponible": "Update date not available",
+  "{nombre}: {hoy} puntos el día seleccionado, {total} puntos-día en 90 días": "{nombre}: {hoy} points on the selected day, {total} point-days in 90 days",
+  "Sin ubicación válida: {dia} el día seleccionado, {total} en 90 días. Cuentan solo en el total nacional.": "No valid location: {dia} on the selected day, {total} in 90 days. They count only in the national total.",
+  "Fecha no disponible": "Date not available",
+  "Acercar": "Zoom in",
+  "Alejar": "Zoom out",
+  "día bloqueado": "day blocked",
+  "días bloqueado": "days blocked",
+  "Primer día: {fecha}": "First day: {fecha}",
+  "Último día: {fecha}": "Last day: {fecha}",
+  "Bloqueos · {territorio}": "Blockades · {territorio}",
+  "Mapa de bloqueos · {territorio} · {periodo}": "Map of blockades · {territorio} · {periodo}",
+  "últimos 90 días": "last 90 days",
+  "el {fecha}": "on {fecha}",
+  "en 90 días": "in 90 days",
+  "punto": "point",
+  "puntos": "points",
+  "punto-día": "point-day",
+  "puntos-día": "point-days",
+  "Relleno: puntos-día en 90 días · Tamaño del círculo: días bloqueado": "Fill: point-days in 90 days · Circle size: days blocked",
+  "Cargando puntos…": "Loading points…",
+  "Fecha no disponible. Selecciona la vista de 90 días para ver los puntos.": "Date not available. Choose the 90-day view to see the points.",
+  "Sin bloqueos en los últimos 90 días": "No blockades in the last 90 days",
+  "Sin bloqueos reportados el {fecha}": "No blockades reported on {fecha}",
+  " · semana parcial ({n} d)": " · partial week ({n} d)",
+  "Semana del {rango}{parcial}": "Week of {rango}{parcial}",
+  "{n} en la semana": "{n} in the week",
+  "máximo {maximo} en un día · {dias} de {n} días con bloqueo": "max {maximo} in a day · {dias} of {n} days with blockades",
+  "punto bloqueado": "blocked point",
+  "puntos bloqueados": "blocked points",
+  "desde el {fecha}": "since {fecha}",
+  "desde {fecha}": "since {fecha}",
+  "noticias": "news items",
+  "Cargando la serie nacional…": "Loading the national series…",
+  "Cargando la serie departamental…": "Loading the department series…",
+  "No fue posible cargar el mapa. Los demás datos siguen disponibles.": "Could not load the map. The other data remain available.",
+  "No fue posible iniciar el mapa.": "Could not initialize the map.",
+  "No fue posible cargar la serie nacional.": "Could not load the national series.",
+  "No fue posible cargar los datos por departamento.": "Could not load the data by department.",
+  "No fue posible cargar los puntos de bloqueo.": "Could not load the blockade points.",
+  "No fue posible cargar los límites departamentales.": "Could not load the department boundaries.",
+  "No fue posible cargar el resumen de noticias.": "Could not load the news summary.",
+  "El CSV tiene comillas sin cerrar.": "The CSV has unclosed quotes.",
+  "El CSV tiene filas incompletas.": "The CSV has incomplete rows.",
+  "No fue posible cargar el archivo.": "Could not load the file.",
+  "El archivo no tiene el formato esperado.": "The file does not have the expected format.",
+  "El archivo contiene un valor no válido.": "The file contains an invalid value.",
+  "Lo que pasa en las carreteras y en las noticias de Bolivia: los puntos bloqueados por conflictos sociales, <b>día a día</b> y por departamento, y un índice de incertidumbre construido a partir de once medios de prensa.": "What is happening on Bolivia's roads and in its news: road points blocked by social conflicts, <b>day by day</b> and by department, and an uncertainty index built from eleven news outlets.",
+  "La unidad de conteo es <b>una coordenada única por día</b>. Un mismo punto de la carretera reportado varias veces en una jornada cuenta una sola vez.": "The counting unit is <b>one unique coordinate per day</b>. A road point reported several times in a day is counted only once.",
+  "Un punto se cuenta desde el día en que se reporta el bloqueo y sigue contando mientras el episodio permanezca abierto. El último día se cuenta solo si, antes del cierre, hubo al menos una observación en la que el episodio seguía activo; si se cierra en la primera observación del día, ese día no cuenta.": "A point is counted from the day the blockade is reported and continues to count while the episode remains open. The last day is counted only if, before closure, there was at least one observation in which the episode was still active; if it is closed in the first observation of the day, that day is not counted.",
+  "Solo se consideran los reportes cuyo estado corresponde a un tramo no transitable por conflictos sociales, con fecha y coordenadas válidas.": "Only reports whose status corresponds to a road section impassable due to social conflicts, with valid dates and coordinates, are considered.",
+  "Cada punto se asigna a un departamento ubicando su coordenada dentro de los límites departamentales de GeoBolivia. Si cae fuera del país a menos de 5 km del borde (pasos fronterizos), se asigna al departamento más cercano. Los puntos que la ABC publica sin coordenadas válidas cuentan en el total nacional, pero no en ningún departamento.": "Each point is assigned to a department by locating its coordinate within the GeoBolivia department boundaries. If it falls outside the country less than 5 km from the border (border crossings), it is assigned to the nearest department. Points published by ABC without valid coordinates count toward the national total, but not toward any department.",
+  "En <code>codigo/indicador.py</code> de este mismo repositorio puede leerse la lógica exacta de este cálculo. Es una copia de referencia, publicada para poder auditarla: se extrae en cada actualización del motor que realmente produce la serie.": "The exact logic of this calculation can be read in <code>codigo/indicador.py</code> in this same repository. It is a reference copy, published so it can be audited: it is extracted at each update from the engine that actually produces the series."
+} };
+let idioma = "es";
+try {
+  const guardado = localStorage.getItem("idioma");
+  if (guardado === "en" || guardado === "es") idioma = guardado;
+} catch {}
+const configuracionRegional = () => idioma === "en" ? "en-US" : "es-BO";
+const originalesIdioma = new WeakMap();
+let entero;
+let diaMes;
+let diaCompleto;
+
+function traducir(clave, valores = {}) {
+  const plantilla = diccionario[idioma]?.[clave] ?? clave;
+  return plantilla.replace(/\{(\w+)\}/g, (marca, nombre) => valores[nombre] ?? marca);
+}
+
+function prepararFormatos() {
+  entero = new Intl.NumberFormat(configuracionRegional(), { maximumFractionDigits: 0 });
+  diaMes = new Intl.DateTimeFormat(configuracionRegional(), {
+    timeZone: "UTC", day: "2-digit", month: "short",
+  });
+  diaCompleto = new Intl.DateTimeFormat(configuracionRegional(), {
+    timeZone: "UTC", weekday: "long", day: "2-digit", month: "long", year: "numeric",
+  });
+}
+
+function aplicarIdioma() {
+  document.querySelectorAll("[data-i18n-lang]").forEach((el) => el.setAttribute("lang", idioma));
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    if (!originalesIdioma.has(el)) originalesIdioma.set(el, el.innerHTML);
+    el.innerHTML = idioma === "es" ? originalesIdioma.get(el) : traducir(el.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach((el) => el.setAttribute("aria-label", traducir(el.dataset.i18nAria)));
+  document.querySelectorAll("[data-i18n-content]").forEach((el) => el.setAttribute("content", traducir(el.dataset.i18nContent)));
+  document.querySelectorAll("#idioma button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.l === idioma)));
+  actualizarZoom();
+}
+
+function actualizarZoom() {
+  document.querySelectorAll("#mapa .leaflet-control-zoom a").forEach((b, i) => {
+    const etiqueta = traducir(i === 0 ? "Acercar" : "Alejar");
+    b.setAttribute("title", etiqueta);
+    b.setAttribute("aria-label", etiqueta);
+  });
+}
+
+function cambiarIdioma(nuevo) {
+  if (!["es", "en"].includes(nuevo) || nuevo === idioma) return;
+  idioma = nuevo;
+  try { localStorage.setItem("idioma", idioma); } catch {}
+  prepararFormatos();
+  aplicarIdioma();
+  actualizar();
+  window.dispatchEvent(new Event("idiomachange"));
+}
+
+prepararFormatos();
 
 let serie = [];
 let vista = "dia";
@@ -20,6 +189,7 @@ let modoMapa = "dia";
 let mapa = null;
 let capaLimites = null;
 let capaPuntos = null;
+const estilosMapa = new Map();
 const errores = {};
 const departamentos = [
   { id: "beni", nombre: "Beni" },
@@ -72,7 +242,7 @@ const datosVista = () => (vista === "semana" ? porSemana(serie) : serie);
 
 function mostrarError(detalle) {
   $("#estado").hidden = false;
-  $("#estado-detalle").textContent = detalle;
+  $("#estado-detalle").textContent = traducir(detalle);
 }
 
 function leerCSV(texto) {
@@ -97,24 +267,24 @@ function leerCSV(texto) {
       if (c === "\r" && contenido[i + 1] === "\n") i += 1;
     } else campo += c;
   }
-  if (comillas) throw new Error("El CSV tiene comillas sin cerrar.");
+  if (comillas) throw new Error(traducir("El CSV tiene comillas sin cerrar."));
   fila.push(campo);
   if (fila.some((v) => v !== "")) filas.push(fila);
   const cabecera = filas.shift() || [];
-  if (filas.some((f) => f.length !== cabecera.length)) throw new Error("El CSV tiene filas incompletas.");
+  if (filas.some((f) => f.length !== cabecera.length)) throw new Error(traducir("El CSV tiene filas incompletas."));
   return { cabecera, filas: filas.map((f) => Object.fromEntries(cabecera.map((c, i) => [c, f[i]]))) };
 }
 
 async function cargarCSV(archivo, columnas) {
   const respuesta = await fetch(`data/${archivo}?v=${Date.now()}`, { cache: "no-store" });
-  if (!respuesta.ok) throw new Error("No fue posible cargar el archivo.");
+  if (!respuesta.ok) throw new Error(traducir("No fue posible cargar el archivo."));
   const datos = leerCSV(await respuesta.text());
-  if (columnas.some((c) => !datos.cabecera.includes(c))) throw new Error("El archivo no tiene el formato esperado.");
+  if (columnas.some((c) => !datos.cabecera.includes(c))) throw new Error(traducir("El archivo no tiene el formato esperado."));
   return datos.filas;
 }
 
 function numero(valor) {
-  if (valor === "" || !Number.isFinite(Number(valor))) throw new Error("El archivo contiene un valor no válido.");
+  if (valor === "" || !Number.isFinite(Number(valor))) throw new Error(traducir("El archivo contiene un valor no válido."));
   return Number(valor);
 }
 
@@ -136,7 +306,7 @@ function actualizar() {
   pintarMapa();
 }
 
-function seleccionarTerritorio(id) {
+function seleccionarTerritorio(id, animado = true) {
   if (id !== "bolivia" && !departamentos.some((d) => d.id === id)) return;
   territorio = id;
   document.querySelectorAll("#territorios button").forEach((b) => {
@@ -145,7 +315,7 @@ function seleccionarTerritorio(id) {
     b.setAttribute("aria-pressed", String(activo));
   });
   actualizar();
-  encuadrar();
+  encuadrar(animado);
 }
 
 function seleccionarDia(iso) {
@@ -164,29 +334,45 @@ function moverDia(paso) {
   if (dias[i + paso]) seleccionarDia(dias[i + paso].fecha);
 }
 
+function contar(el, valor) {
+  if (!el) return;
+  if (!Number.isFinite(valor)) { el.textContent = "—"; el.dataset.valor = ""; return; }
+  const desde = Number(el.dataset.valor || 0);
+  el.dataset.valor = String(valor);
+  cancelAnimationFrame(el.animacion || 0);
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || desde === valor) { el.textContent = entero.format(valor); return; }
+  const inicio = performance.now();
+  const paso = (t) => {
+    const k = Math.min(1, (t - inicio) / 900);
+    el.textContent = entero.format(Math.round(desde + (valor - desde) * (1 - (1 - k) ** 3)));
+    if (k < 1) el.animacion = requestAnimationFrame(paso);
+  };
+  el.animacion = requestAnimationFrame(paso);
+}
+
 function pintarCifras() {
   const ultimo = serie.at(-1);
   const valores = serie.map((p) => p.bloqueos);
   const conBloqueo = valores.filter((v) => v > 0).length;
 
-  $("#r-hoy").textContent = `Bloqueos hoy · ${nombreTerritorio()}`;
-  $("#r-con-bloqueo").textContent = `Días con bloqueo · ${nombreTerritorio()}`;
-  $("#c-hoy").textContent = ultimo ? entero.format(ultimo.bloqueos) : "—";
-  $("#c-hoy-fecha").textContent = ultimo ? diaMes.format(fecha(ultimo.fecha)) : "Datos no disponibles";
-  $("#c-max").textContent = ultimo ? entero.format(Math.max(...valores)) : "—";
-  $("#c-dias").textContent = ultimo ? entero.format(conBloqueo) : "—";
+  $("#r-hoy").textContent = traducir("Bloqueos hoy · {territorio}", { territorio: nombreTerritorio() });
+  $("#r-con-bloqueo").textContent = traducir("Días con bloqueo · {territorio}", { territorio: nombreTerritorio() });
+  contar($("#c-hoy"), ultimo ? ultimo.bloqueos : NaN);
+  $("#c-hoy-fecha").textContent = ultimo ? diaMes.format(fecha(ultimo.fecha)) : traducir("Datos no disponibles");
+  contar($("#c-max"), ultimo ? Math.max(...valores) : NaN);
+  contar($("#c-dias"), ultimo ? conBloqueo : NaN);
 
   const n = serie.length || 90;
-  $("#r-max").textContent = `Máximo en ${n} días · ${nombreTerritorio()}`;
-  $("#r-dias").textContent = `de los últimos ${n}`;
-  $("#r-titulo").textContent = `Últimos ${n} días · ${nombreTerritorio()}`;
-  $("#grafico").setAttribute("aria-label", `Bloqueos ${vista === "dia" ? "diarios" : "semanales"} de los últimos ${n} días · ${nombreTerritorio()}`);
+  $("#r-max").textContent = traducir("Máximo en {n} días · {territorio}", { n, territorio: nombreTerritorio() });
+  $("#r-dias").textContent = traducir("de los últimos {n}", { n });
+  $("#r-titulo").textContent = traducir("Últimos {n} días · {territorio}", { n, territorio: nombreTerritorio() });
+  $("#grafico").setAttribute("aria-label", traducir(vista === "dia" ? "Bloqueos diarios de los últimos {n} días · {territorio}" : "Bloqueos semanales de los últimos {n} días · {territorio}", { n, territorio: nombreTerritorio() }));
 
   $("#rango").textContent =
     ultimo ? `${diaMes.format(fecha(serie[0].fecha))} — ${diaMes.format(fecha(ultimo.fecha))}` : "—";
   const actualizado = calendario().at(-1);
   $("#pie-actualizado").textContent =
-    actualizado ? `Última actualización: ${diaCompleto.format(fecha(actualizado.fecha))}` : "Fecha de actualización no disponible";
+    actualizado ? traducir("Última actualización: {fecha}", { fecha: diaCompleto.format(fecha(actualizado.fecha)) }) : traducir("Fecha de actualización no disponible");
 }
 
 function pintarPanel() {
@@ -197,7 +383,7 @@ function pintarPanel() {
   if (!departamentales) {
     const mensaje = document.createElement("p");
     mensaje.className = "nota-vista";
-    mensaje.textContent = errores.departamentos || "Cargando departamentos…";
+    mensaje.textContent = traducir(errores.departamentos || "Cargando departamentos…");
     panel.append(mensaje);
     return;
   }
@@ -214,7 +400,7 @@ function pintarPanel() {
     boton.dataset.territorio = d.id;
     boton.setAttribute("aria-pressed", String(territorio === d.id));
     const hoy = fila ? entero.format(fila[d.id]) : "—";
-    boton.setAttribute("aria-label", `${d.nombre}: ${hoy} puntos el día seleccionado, ${entero.format(d.total)} puntos-día en 90 días`);
+    boton.setAttribute("aria-label", traducir("{nombre}: {hoy} puntos el día seleccionado, {total} puntos-día en 90 días", { nombre: d.nombre, hoy, total: entero.format(d.total) }));
     boton.innerHTML = `<span class="departamento-nombre">${d.nombre}</span>` +
       `<span class="departamento-valores"><b>${hoy}</b> / ${entero.format(d.total)}</span>` +
       `<span class="departamento-barra" aria-hidden="true"><span style="width:${d.total / maximo * 100}%"></span></span>`;
@@ -224,14 +410,14 @@ function pintarPanel() {
   const sinTotal = departamentales.reduce((suma, p) => suma + p.sin_ubicacion, 0);
   if (sinDia > 0 || sinTotal > 0) {
     $("#sin-ubicacion").hidden = false;
-    $("#sin-ubicacion").textContent = `Sin ubicación válida: ${entero.format(sinDia)} el día seleccionado, ${entero.format(sinTotal)} en 90 días. Cuentan solo en el total nacional.`;
+    $("#sin-ubicacion").textContent = traducir("Sin ubicación válida: {dia} el día seleccionado, {total} en 90 días. Cuentan solo en el total nacional.", { dia: entero.format(sinDia), total: entero.format(sinTotal) });
   }
 }
 
 function pintarFecha() {
   const dias = calendario();
   const i = dias.findIndex((p) => p.fecha === diaSeleccionado);
-  $("#mapa-fecha").textContent = diaSeleccionado ? diaCompleto.format(fecha(diaSeleccionado)) : "Fecha no disponible";
+  $("#mapa-fecha").textContent = diaSeleccionado ? diaCompleto.format(fecha(diaSeleccionado)) : traducir("Fecha no disponible");
   $("#dia-anterior").disabled = i <= 0;
   $("#dia-siguiente").disabled = i < 0 || i >= dias.length - 1;
 }
@@ -249,17 +435,16 @@ function prepararMapa() {
     attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>", maxZoom: 18,
   }).addTo(mapa);
   mapa.zoomControl.setPosition("topleft");
-  const controles = $("#mapa").querySelectorAll(".leaflet-control-zoom a");
-  controles.forEach((b, i) => {
-    const texto = i === 0 ? "Acercar" : "Alejar";
-    b.setAttribute("title", texto);
-    b.setAttribute("aria-label", texto);
+  mapa.on("contextmenu", (e) => {
+    e.originalEvent?.preventDefault();
+    seleccionarTerritorio("bolivia");
   });
+  actualizarZoom();
   capaPuntos = L.layerGroup().addTo(mapa);
   encuadrar();
 }
 
-function encuadrar() {
+function encuadrar(animado = false) {
   if (!mapa) return;
   let limitesVista = capaLimites?.getBounds();
   if (territorio !== "bolivia" && capaLimites) {
@@ -267,7 +452,9 @@ function encuadrar() {
       if (capa.feature.properties.id === territorio) limitesVista = capa.getBounds();
     });
   }
-  mapa.fitBounds(limitesVista || [[-22.9, -69.7], [-9.6, -57.4]], { padding: [18, 18], animate: false });
+  const caja = limitesVista || [[-22.9, -69.7], [-9.6, -57.4]];
+  if (animado && !matchMedia("(prefers-reduced-motion: reduce)").matches) mapa.flyToBounds(caja, { padding: [18, 18], duration: 1.4, easeLinearity: .15 });
+  else mapa.fitBounds(caja, { padding: [18, 18], animate: false });
 }
 
 function resumirPuntos(datos) {
@@ -290,9 +477,9 @@ function contenidoPopup(p) {
   caja.append(seccion);
   const nombre = departamentos.find((d) => d.id === p.departamento)?.nombre || p.departamento;
   const lineas = modoMapa === "dia" ? [nombre, diaCompleto.format(fecha(p.fecha))] : [
-    nombre, `${entero.format(p.dias.size)} ${p.dias.size === 1 ? "día bloqueado" : "días bloqueado"}`,
-    `Primer día: ${diaCompleto.format(fecha(p.primero))}`,
-    `Último día: ${diaCompleto.format(fecha(p.ultimo))}`,
+    nombre, `${entero.format(p.dias.size)} ${traducir(p.dias.size === 1 ? "día bloqueado" : "días bloqueado")}`,
+    traducir("Primer día: {fecha}", { fecha: diaCompleto.format(fecha(p.primero)) }),
+    traducir("Último día: {fecha}", { fecha: diaCompleto.format(fecha(p.ultimo)) }),
   ];
   lineas.forEach((linea) => {
     const texto = document.createElement("div");
@@ -303,17 +490,17 @@ function contenidoPopup(p) {
 }
 
 function pintarMapa() {
-  $("#mapa-titulo").textContent = `Bloqueos · ${nombreTerritorio()}`;
-  $("#mapa").setAttribute("aria-label", `Mapa de bloqueos · ${nombreTerritorio()} · ${modoMapa === "dia" ? diaSeleccionado : "últimos 90 días"}`);
+  $("#mapa-titulo").textContent = traducir("Bloqueos · {territorio}", { territorio: nombreTerritorio() });
+  $("#mapa").setAttribute("aria-label", traducir("Mapa de bloqueos · {territorio} · {periodo}", { territorio: nombreTerritorio(), periodo: modoMapa === "dia" ? diaSeleccionado : traducir("últimos 90 días") }));
   const aviso = $("#mapa-aviso");
   const texto = $("#mapa-aviso-texto");
   $("#ver-ventana").hidden = true;
   aviso.hidden = false;
-  const fallos = [...new Set(Object.values(errores))];
+  const fallos = [...new Set(Object.values(errores).map((error) => traducir(error)))];
   $("#mapa-error").textContent = fallos.join(" ");
   $("#mapa-error").hidden = fallos.length === 0;
   if (!mapa) {
-    texto.textContent = errores.mapa || "Cargando mapa…";
+    texto.textContent = traducir(errores.mapa || "Cargando mapa…");
     return;
   }
   const estilo = getComputedStyle(document.documentElement);
@@ -329,6 +516,15 @@ function pintarMapa() {
     capaLimites = L.geoJSON(limites, {
       onEachFeature: (feature, capa) => {
         capa.on("click", () => seleccionarTerritorio(feature.properties.id));
+        capa.on("mouseover", () => {
+          const base = estilosMapa.get(feature.properties.id) || {};
+          capa.setStyle({ ...base, color: "#ffffff", weight: 2.6, opacity: 1, fillOpacity: Math.min(.85, (base.fillOpacity || 0) + .2) });
+          capa.bringToFront();
+        });
+        capa.on("mouseout", () => {
+          capa.setStyle(estilosMapa.get(feature.properties.id) || {});
+          capaLimites.eachLayer((otra) => { if (otra.feature.properties.id === territorio) otra.bringToFront(); });
+        });
       },
     }).addTo(mapa);
     encuadrar();
@@ -336,28 +532,30 @@ function pintarMapa() {
   capaLimites?.eachLayer((capa) => {
     const { id, nombre } = capa.feature.properties;
     const valor = fila?.[id];
-    capa.setStyle({
+    const estilo = {
       color: tinta, weight: territorio === id ? 2.8 : .8,
       opacity: territorio === "bolivia" || territorio === id ? .8 : .35,
       fillColor: alerta, fillOpacity: valor > 0 ? .15 + .5 * valor / maximo : 0,
-    });
-    const cuando = modoMapa === "dia" ? `el ${diaMes.format(fecha(diaSeleccionado))}` : "en 90 días";
-    const unidad = modoMapa === "dia" ? (valor === 1 ? "punto" : "puntos") : (valor === 1 ? "punto-día" : "puntos-día");
-    const mensaje = `${nombre} · ${valor === undefined ? "Datos no disponibles" : `${entero.format(valor)} ${unidad} ${cuando}`}`;
+    };
+    estilosMapa.set(id, estilo);
+    capa.setStyle(estilo);
+    const cuando = modoMapa === "dia" ? traducir("el {fecha}", { fecha: diaMes.format(fecha(diaSeleccionado)) }) : traducir("en 90 días");
+    const unidad = traducir(modoMapa === "dia" ? (valor === 1 ? "punto" : "puntos") : (valor === 1 ? "punto-día" : "puntos-día"));
+    const mensaje = `${nombre} · ${valor === undefined ? traducir("Datos no disponibles") : `${entero.format(valor)} ${unidad} ${cuando}`}`;
     if (capa.getTooltip()) capa.setTooltipContent(mensaje);
     else capa.bindTooltip(mensaje, { sticky: true });
     if (territorio === id) capa.bringToFront();
   });
   capaPuntos.clearLayers();
-  $("#mapa-leyenda").textContent = modoMapa === "dia"
+  $("#mapa-leyenda").textContent = traducir(modoMapa === "dia"
     ? "Relleno: bloqueos del día · Círculos: puntos bloqueados"
-    : "Relleno: puntos-día en 90 días · Tamaño del círculo: días bloqueado";
+    : "Relleno: puntos-día en 90 días · Tamaño del círculo: días bloqueado");
   if (!puntos) {
-    texto.textContent = errores.puntos || "Cargando puntos…";
+    texto.textContent = traducir(errores.puntos || "Cargando puntos…");
     return;
   }
   if (!diaSeleccionado && modoMapa === "dia") {
-    texto.textContent = "Fecha no disponible. Selecciona la vista de 90 días para ver los puntos.";
+    texto.textContent = traducir("Fecha no disponible. Selecciona la vista de 90 días para ver los puntos.");
     $("#ver-ventana").hidden = false;
     return;
   }
@@ -374,8 +572,8 @@ function pintarMapa() {
   aviso.hidden = visibles.length > 0;
   if (!visibles.length) {
     texto.textContent = !delTerritorio.length || modoMapa === "ventana"
-      ? "Sin bloqueos en los últimos 90 días"
-      : `Sin bloqueos reportados el ${diaMes.format(fecha(diaSeleccionado))}`;
+      ? traducir("Sin bloqueos en los últimos 90 días")
+      : traducir("Sin bloqueos reportados el {fecha}", { fecha: diaMes.format(fecha(diaSeleccionado)) });
     $("#ver-ventana").hidden = !delTerritorio.length || modoMapa === "ventana";
   }
 }
@@ -411,7 +609,9 @@ function dibujar() {
   const arriba = 14;
   const abajo = 26;
   const datos = datosVista();
-  const maximo = Math.max(1, ...datos.map((p) => p.bloqueos));
+  const mayor = Math.max(1, ...datos.map((p) => p.bloqueos));
+  const pasoEje = Math.max(1, Math.ceil(mayor / 4));
+  const maximo = pasoEje * Math.ceil(mayor / pasoEje);
   const base = alto - abajo;
 
   const paso = (ancho - izq - der) / datos.length;
@@ -426,9 +626,9 @@ function dibujar() {
   const guiaColor = estilo.getPropertyValue("--guia").trim() || "rgba(0,0,0,.3)";
 
   const rejilla = svg("g");
-  const pasos = 4;
+  const pasos = maximo / pasoEje;
   for (let k = 0; k <= pasos; k += 1) {
-    const valor = (maximo * k) / pasos;
+    const valor = pasoEje * k;
     const yy = y(valor);
     rejilla.append(svg("line", {
       x1: 0, x2: ancho - der + 4, y1: yy.toFixed(1), y2: yy.toFixed(1),
@@ -533,16 +733,15 @@ function mostrarTip(evento) {
   const tip = $("#tip");
   if (vista === "semana") {
     const rotulo = `${diaMes.format(fecha(punto.fecha))} — ${diaMes.format(fecha(punto.hasta))}`;
-    const parcial = punto.completa ? "" : ` · semana parcial (${punto.dias} d)`;
+    const parcial = punto.completa ? "" : traducir(" · semana parcial ({n} d)", { n: punto.dias });
     tip.innerHTML =
-      `Semana del ${rotulo}${parcial}` +
-      `<b>${entero.format(punto.bloqueos)} en la semana</b>` +
-      `<span class="detalle">máximo ${entero.format(punto.maximo)} en un día · ` +
-      `${punto.diasConBloqueo} de ${punto.dias} días con bloqueo</span>`;
+      traducir("Semana del {rango}{parcial}", { rango: rotulo, parcial }) +
+      `<b>${traducir("{n} en la semana", { n: entero.format(punto.bloqueos) })}</b>` +
+      `<span class="detalle">${traducir("máximo {maximo} en un día · {dias} de {n} días con bloqueo", { maximo: entero.format(punto.maximo), dias: punto.diasConBloqueo, n: punto.dias })}</span>`;
   } else {
     tip.innerHTML =
       `${diaCompleto.format(fecha(punto.fecha))}<b>${entero.format(punto.bloqueos)} ` +
-      `${punto.bloqueos === 1 ? "punto bloqueado" : "puntos bloqueados"}</b>`;
+      `${traducir(punto.bloqueos === 1 ? "punto bloqueado" : "puntos bloqueados")}</b>`;
   }
   tip.hidden = false;
 
@@ -658,4 +857,9 @@ async function iniciar() {
   ]);
 }
 
+aplicarIdioma();
+$("#idioma").addEventListener("click", (evento) => {
+  const boton = evento.target.closest("button[data-l]");
+  if (boton) cambiarIdioma(boton.dataset.l);
+});
 iniciar();
