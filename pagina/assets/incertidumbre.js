@@ -82,7 +82,7 @@
 
   function titulares(lista) {
     if (!lista.length) { $("#titulares").hidden = true; return; }
-    const uno = lista.map((t) => `<a class="titular" href="${limpio(t.url)}" target="_blank" rel="noopener noreferrer"><b>${limpio(nombre(t.fuente))}</b>${limpio(t.titulo)}</a>`).join("");
+    const uno = lista.filter((t) => /^https:\/\//i.test(String(t.url))).map((t) => `<a class="titular" href="${limpio(t.url)}" target="_blank" rel="noopener noreferrer"><b>${limpio(nombre(t.fuente))}</b>${limpio(t.titulo)}</a>`).join("");
     $("#titulares-pista").innerHTML = uno + uno;
   }
 
