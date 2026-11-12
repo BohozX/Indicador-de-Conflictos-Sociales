@@ -1,3 +1,23 @@
+"""Calculo del indicador de conflictos sociales en carreteras de Bolivia.
+
+===============================================================================
+ARCHIVO DE REFERENCIA. NO SE EJECUTA NI SE IMPORTA EN NINGUN LADO.
+
+Esta aqui para que se pueda leer y auditar como se calcula el indicador. Nada
+en este repositorio lo llama: ni el workflow, ni la pagina, ni las
+herramientas. La serie publicada NO sale de este archivo.
+
+La serie sale del motor privado. Este archivo es una copia de solo lectura de
+su logica de calculo, extraida automaticamente en cada corrida: si el motor
+cambia, esto cambia detras. Por eso se lee, no se edita ni se corre.
+===============================================================================
+
+Contiene unicamente la logica de calculo: como se pasa de los reportes de
+transitabilidad a un conteo diario de bloqueos. La obtencion de los datos no
+forma parte de este archivo.
+
+Unidad de conteo: una coordenada unica por dia.
+"""
 
 from __future__ import annotations
 
