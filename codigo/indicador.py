@@ -1,23 +1,3 @@
-"""Calculo del indicador de conflictos sociales en carreteras de Bolivia.
-
-===============================================================================
-ARCHIVO DE REFERENCIA. NO SE EJECUTA NI SE IMPORTA EN NINGUN LADO.
-
-Esta aqui para que se pueda leer y auditar como se calcula el indicador. Nada
-en este repositorio lo llama: ni el workflow, ni la pagina, ni las
-herramientas. La serie publicada NO sale de este archivo.
-
-La serie sale del motor privado. Este archivo es una copia de solo lectura de
-su logica de calculo, extraida automaticamente en cada corrida: si el motor
-cambia, esto cambia detras. Por eso se lee, no se edita ni se corre.
-===============================================================================
-
-Contiene unicamente la logica de calculo: como se pasa de los reportes de
-transitabilidad a un conteo diario de bloqueos. La obtencion de los datos no
-forma parte de este archivo.
-
-Unidad de conteo: una coordenada unica por dia.
-"""
 
 from __future__ import annotations
 
@@ -109,7 +89,6 @@ def frame_schema(df):
 
 
 def remove_exact_duplicates(df):
-    """Elimina solo filas 100 % idénticas; preserva reapariciones reales."""
     out = frame_schema(df)
     return (
         out.drop_duplicates(subset=COLUMNS, keep="first")
@@ -122,7 +101,6 @@ def remove_exact_duplicates(df):
 
 
 def observable_activities(df):
-    """Cambios reconstruibles: cualquier alta o cierre, de cualquier estado."""
     data = frame_schema(df)
     timestamps = (
         pd.concat(
@@ -140,7 +118,6 @@ def observable_activities(df):
 
 
 def episode_start_days(data):
-    """Overrides solo para reapariciones de una clave exacta ya cerrada."""
     duplicated = data.loc[data.duplicated(subset=KEY_COLUMNS, keep=False)]
     if duplicated.empty:
         return {}
@@ -157,17 +134,6 @@ def episode_start_days(data):
 
 
 def build_point_days(df, start_date, end_date):
-    """Calcula solo el rango solicitado usando la metodología histórica final.
-
-    Reglas:
-    - unidad: coordenada única por día;
-    - día de fecha_reporte: cuenta;
-    - días intermedios de una versión abierta: cuentan;
-    - día terminal posterior al reporte: cuenta solo si antes de fecha_fin
-      hubo al menos una actividad observable en la base y el episodio seguía abierto;
-    - si se cierra en la primera actividad observable del día, el terminal no cuenta;
-    - varias versiones de una coordenada el mismo día cuentan una sola vez.
-    """
     data = remove_exact_duplicates(df)
     activities = observable_activities(data)
     effective_starts = episode_start_days(data)
