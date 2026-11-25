@@ -43,6 +43,7 @@ COLUMNS = [
     "restricción_vehicular",
     "sector",
     "trabajos_de_conservación_vial",
+    "detalles",
 ]
 
 KEY_COLUMNS = [
